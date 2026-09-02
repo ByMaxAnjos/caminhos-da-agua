@@ -1,4 +1,4 @@
-const CACHE_NAME = "caminhos-da-agua-v1";
+const CACHE_NAME = "caminhos-da-agua-v2";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -21,13 +21,16 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+// Rede primeiro, cache como reserva — para quem já visitou o site sempre ver a
+// versão publicada mais recente quando estiver online. O cache só entra em
+// jogo sem rede (offline em campo), que é o requisito real (§10.5 da spec).
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
+    fetch(event.request).then((response) => {
       const copy = response.clone();
       caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
       return response;
-    }))
+    }).catch(() => caches.match(event.request))
   );
 });
