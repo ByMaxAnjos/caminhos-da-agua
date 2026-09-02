@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caminhos da Água</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a class="topbar-brand" href="index.html">Caminhos da Água</a>
+  <strong id="topbar-missao" aria-live="polite"></strong>
+</header>
+
+<main id="view" tabindex="-1"></main>
+
+<nav class="tabs" aria-label="Navegação da investigação">
+  <button data-rota="cebola" aria-label="Visão geral da investigação" onclick="location.hash='#/cebola'"><span aria-hidden="true">◉</span><span>Visão geral</span></button>
+  <button data-rota="evidencias" aria-label="Evidências" onclick="location.hash='#/evidencias'"><span aria-hidden="true">▤</span><span>Evidências</span></button>
+  <button data-rota="conexoes" aria-label="Conexões" onclick="location.hash='#/conexoes'"><span aria-hidden="true">↗</span><span>Conexões</span></button>
+  <button data-rota="sintese" aria-label="Síntese final" onclick="location.hash='#/sintese'"><span aria-hidden="true">✓</span><span>Síntese</span></button>
+  <button data-rota="perfil" aria-label="Perfil e progresso" onclick="location.hash='#/perfil'"><span aria-hidden="true">○</span><span>Perfil</span></button>
+</nav>
+
+<script src="assets/app.js"></script>
+<script>
+  CaminhosDaAgua.bootApp();
+  (function () {
+    try {
+      var m = JSON.parse(localStorage.getItem("cda:missao") || "null");
+      if (m) document.getElementById("topbar-missao").textContent = m.titulo;
+    } catch (e) {}
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "id": "paraibuna-enchentes-2026",
+  "versaoEsquema": 1,
+  "titulo": "Por que o rio da nossa cidade está mais sujeito a enchentes?",
+  "perguntaProblema": "A mesma chuva de sempre produz mais enchente hoje do que produziria há trinta anos. Por quê — e o que se pode fazer a respeito?",
+  "contexto": "Juiz de Fora foi atingida por chuvas intensas em fevereiro e novamente em junho de 2026. Houve alagamento em pontos que já alagavam e em pontos que não alagavam. Moradores antigos dizem que \"antes chovia mais e alagava menos\". Sua tarefa não é dizer se choveu muito — é explicar por que a bacia responde diferente à mesma chuva, e propor uma ação.",
+  "bacia": {
+    "nome": "Rio Paraibuna e afluentes (Córregos Ipiranga e Teixeiras)",
+    "municipio": "Juiz de Fora (MG)",
+    "comite": "CBH — Afluentes Mineiros dos Rios Preto e Paraibuna",
+    "ordemStrahler": "[dado local — a ordenar em aula, ver Lição 5]"
+  },
+  "cartas": [
+    { "id": "c1", "camadaId": 1, "titulo": "Normal climatológica de precipitação mensal — estação INMET Juiz de Fora", "tipo": "Série de dados", "fonte": "INMET — Normais Climatológicas [dado local: baixar série real]", "conteudo": "Placeholder — importar a normal 1991-2020 da estação mais próxima do recorte.", "perguntaQueResponde": "A chuva do evento foi excepcional em relação à normal do mês?" },
+    { "id": "c2", "camadaId": 1, "titulo": "Precipitação diária — fevereiro e junho de 2026", "tipo": "Série de dados", "fonte": "INMET / CEMADEN [dado local: coletar no momento do estudo de caso]", "conteudo": "Placeholder — inserir a série diária real do evento.", "perguntaQueResponde": "A chuva foi concentrada em poucas horas ou distribuída ao longo de vários dias?" },
+    { "id": "c3", "camadaId": 1, "titulo": "Boletim de alerta emitido no evento", "tipo": "Documento", "fonte": "CEMADEN [dado local]", "conteudo": "Placeholder — anexar o boletim real emitido para o evento estudado.", "perguntaQueResponde": "O alerta chegou, e a quem?" },
+    { "id": "c4", "camadaId": 2, "titulo": "Hidrograma do Paraibuna no evento", "tipo": "Gráfico", "fonte": "ANA [dado local: estação fluviométrica]", "conteudo": "Placeholder — importar hidrograma da estação da ANA para o trecho.", "perguntaQueResponde": "O pico de vazão chegou mais rápido do que a chuva sugeriria?" },
+    { "id": "c5", "camadaId": 5, "titulo": "Mancha urbana em três datas (décadas de 1990, 2010, 2020)", "tipo": "Mapa", "fonte": "Imagem de satélite [dado local]", "conteudo": "Placeholder — três recortes de imagem de satélite do mesmo enquadramento.", "perguntaQueResponde": "Quanto da bacia foi impermeabilizado entre as três datas?" },
+    { "id": "c6", "camadaId": 3, "titulo": "Mapa de declividade das encostas do recorte", "tipo": "Mapa", "fonte": "MDE — prática de QGIS da Unidade II [dado local]", "conteudo": "Placeholder — exportar o mapa de declividade já produzido em SIG.", "perguntaQueResponde": "Qual a declividade das encostas que drenam para o ponto alagado?" },
+    { "id": "c7", "camadaId": 3, "titulo": "Mapa de solos e carta geológica do recorte", "tipo": "Mapa", "fonte": "Base estadual [dado local]", "conteudo": "Placeholder — recortar a carta de solos/geologia para a área da missão.", "perguntaQueResponde": "O substrato favorece infiltração ou escoamento rápido?" },
+    { "id": "c8", "camadaId": 4, "titulo": "Fotos de trecho canalizado e de trecho com mata ciliar", "tipo": "Imagem", "fonte": "Campo [dado local: fotografar]", "conteudo": "Placeholder — substituir por fotos reais de campo dos dois trechos.", "perguntaQueResponde": "O que muda entre o trecho canalizado e o trecho com mata ciliar?" },
+    { "id": "c9", "camadaId": 4, "titulo": "Largura medida do córrego em três pontos", "tipo": "Medição", "fonte": "Campo [dado local: medir]", "conteudo": "Placeholder — registrar as três larguras medidas em campo (insumo do cálculo de APP, art. 4º da Lei 12.651/2012).", "perguntaQueResponde": "Qual a faixa de APP exigida por lei para esta largura, e ela existe de fato?" },
+    { "id": "c10", "camadaId": 5, "titulo": "Mapa de áreas de risco e ocorrências registradas", "tipo": "Mapa", "fonte": "Defesa Civil de Juiz de Fora [dado local]", "conteudo": "Placeholder — importar o mapa de risco vigente.", "perguntaQueResponde": "Quem mora nas áreas de risco mapeadas?" },
+    { "id": "c11", "camadaId": 5, "titulo": "Cobertura de esgotamento sanitário e renda por bairro", "tipo": "Tabela", "fonte": "Dados municipais / IBGE [dado local]", "conteudo": "Placeholder — tabela por bairro/setor censitário do recorte.", "perguntaQueResponde": "O dano da enchente se distribui igualmente entre os bairros?" },
+    { "id": "c12", "camadaId": 6, "titulo": "Trecho do plano da bacia e ata do comitê sobre drenagem urbana", "tipo": "Documento", "fonte": "CBH Afluentes Mineiros dos Rios Preto e Paraibuna [dado local]", "conteudo": "Placeholder — trecho real do plano/ata sobre drenagem urbana.", "perguntaQueResponde": "O plano da bacia previa isso, e foi executado?" }
+  ]
+}

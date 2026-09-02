@@ -1,0 +1,10 @@
+{
+  "name": "Caminhos da Água",
+  "short_name": "Caminhos",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fdfcf9",
+  "theme_color": "#1d5f6b",
+  "icons": []
+}

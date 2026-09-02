@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caminhos da Água</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+
+<main class="start-shell">
+  <header class="brand-block">
+    <p class="kicker">Água, território e sociedade em conexão</p>
+    <h1>Caminhos da Água</h1>
+    <p class="lede">Investigue uma bacia como um sistema vivo: observe evidências, conecte camadas e explique os caminhos da água.</p>
+  </header>
+
+  <section class="card welcome-card" aria-labelledby="como-funciona">
+    <p class="eyebrow">Como funciona</p>
+    <h2 id="como-funciona">Uma investigação em três movimentos</h2>
+    <div class="steps" aria-label="Etapas da investigação">
+      <div class="step"><span>1</span><p><strong>Observe</strong><br>Encontre evidências no território.</p></div>
+      <div class="step"><span>2</span><p><strong>Conecte</strong><br>Relacione as seis camadas.</p></div>
+      <div class="step"><span>3</span><p><strong>Explique</strong><br>Proponha uma ação possível.</p></div>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="continuar-titulo">
+    <p class="eyebrow">Seu percurso</p>
+    <h2 id="continuar-titulo">Continuar investigação</h2>
+    <div id="continuar-area">
+      <p class="evidencia-status">Nenhuma missão em andamento neste aparelho.</p>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="entrar-titulo">
+    <p class="eyebrow">Começar</p>
+    <h2 id="entrar-titulo">Entre na atividade</h2>
+    <p class="helper-text">Use um nome ou apelido. Seus dados ficam somente neste aparelho.</p>
+    <label for="nome">Nome ou apelido</label>
+    <input type="text" id="nome" autocomplete="nickname" placeholder="Como a equipe vai reconhecer você">
+    <label for="turma">Turma ou equipe <span>(opcional)</span></label>
+    <input type="text" id="turma" autocomplete="organization" placeholder="Ex.: equipe 3">
+    <div class="action-stack">
+      <button class="primary" id="btn-demo">Começar missão: Paraibuna</button>
+      <button class="secondary" id="btn-importar">Importar missão (.json)</button>
+    </div>
+    <input type="file" id="file-importar" accept="application/json" class="hidden">
+    <p class="evidencia-status">O professor também pode preparar outras bacias e compartilhar uma missão pelo arquivo JSON.</p>
+  </section>
+</main>
+
+<script src="assets/app.js"></script>
+<script>CaminhosDaAgua.renderInicial();</script>
+</body>
+</html>
