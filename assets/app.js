@@ -181,28 +181,170 @@
   function renderCebola(_args, view) {
     var d = getDossie();
     var m = getMissao();
-    view.appendChild(el("h2", { text: "A cebola porosa" }));
-    view.appendChild(el("p", { class: "lede", text: (m.perguntaProblema || "") }));
-    view.appendChild(svgCebola(d));
-
     var pts = calcularPontos(d);
-    view.appendChild(el("p", { class: "evidencia-status",
-      text: "Nível " + pts.nivel + "/5 · " + pts.total + " pontos de investigação · " +
-        conexoesSustentadas(d).length + " conexões sustentadas (" +
-        d.conexoes.filter(function (c) { return conexaoSustentada(c) && dentroFora(c); }).length +
-        " de dentro para fora)." }));
+    view.appendChild(el("p", { class: "eyebrow", text: "Missão em andamento" }));
+    view.appendChild(el("h2", { text: m.titulo }));
+    view.appendChild(el("p", { class: "lede", text: m.perguntaProblema || "Investigue os caminhos da água neste território." }));
+    view.appendChild(el("div", { class: "card mission-context" }, [
+      el("p", { class: "eyebrow", text: "Seu desafio" }),
+      el("p", { text: m.contexto || "Observe as evidências, conecte as camadas e construa uma explicação." }),
+      el("p", { class: "evidencia-status", text: "Progresso: " + d.evidencias.filter(function (e) { return !e.descartada; }).length + " evidências · " + conexoesSustentadas(d).length + " conexões · " + pts.total + " pontos" })
+    ]));
+    view.appendChild(el("h3", { text: "Seu percurso" }));
+    view.appendChild(el("div", { class: "guided-path" }, [
+      etapaResumo(1, "Observar", "Analise as evidências selecionadas.", "#/etapa/1", d.evidencias.length >= 1),
+      etapaResumo(2, "Conectar", "Ligue causas e consequências.", "#/etapa/2", conexoesSustentadas(d).length >= 1),
+      etapaResumo(3, "Explicar", "Escreva uma síntese e proponha uma ação.", "#/etapa/3", !!(d.sintese && d.sintese.texto))
+    ]));
+    view.appendChild(el("h3", { text: "Mapa da investigação" }));
+    view.appendChild(svgCebola(d));
+    view.appendChild(el("p", { class: "evidencia-status center-text", text: "A cebola porosa mostra as relações que você construiu entre o território e o rio." }));
+  }
 
-    var lista = el("div", {});
-    camadas().forEach(function (c) {
-      var n = evidenciasDaCamada(d, c.id).length;
-      var card = el("div", { class: "card" }, [
-        el("h3", { text: c.id + ". " + c.nome + " — " + c.caminho }),
-        el("p", { class: "evidencia-status", text: n + " evidência(s) registrada(s)" }),
-        el("button", { class: "secondary", onclick: function () { navegar("#/camada/" + c.id); }, text: "Investigar" })
-      ]);
-      lista.appendChild(card);
+  function etapaResumo(numero, titulo, texto, rotaDestino, concluida) {
+    return el("a", { class: "guided-step" + (concluida ? " done" : ""), href: rotaDestino }, [
+      el("span", { class: "guided-number", text: concluida ? "✓" : String(numero), "aria-hidden": "true" }),
+      el("span", {}, [el("strong", { text: titulo }), el("small", { text: texto })]),
+      el("span", { class: "guided-arrow", text: "→", "aria-hidden": "true" })
+    ]);
+  }
+
+  function renderEtapa(args, view) {
+    var etapa = Number(args[0]) || 1;
+    if (etapa === 1) return renderEtapaEvidencias(view);
+    if (etapa === 2) return renderEtapaConexoes(view);
+    renderEtapaSintese(view);
+  }
+
+  function cabecalhoEtapa(view, numero, titulo, texto) {
+    view.appendChild(el("p", { class: "eyebrow", text: "Etapa " + numero + " de 3" }));
+    view.appendChild(el("h2", { text: titulo }));
+    view.appendChild(el("p", { class: "lede", text: texto }));
+    view.appendChild(el("div", { class: "guided-progress", "aria-label": "Etapa " + numero + " de 3" }, [el("span", { style: "width: " + (numero / 3 * 100) + "%" })]));
+  }
+
+  function renderEtapaEvidencias(view) {
+    var d = getDossie();
+    cabecalhoEtapa(view, 1, "Observe as evidências", "Escolha pelo menos três cartas. Para cada uma, escreva o que você percebe e que consequência ela sugere.");
+    if (!d.hipoteseInicial) { view.appendChild(hipoteseGuiada(d)); return; }
+    var m = getMissao();
+    var ids = ["c1", "c4", "c5", "c6", "c10"];
+    var cartas = (m.cartas || []).filter(function (carta) { return ids.indexOf(carta.id) >= 0; });
+    cartas.forEach(function (carta) { view.appendChild(cartaGuiada(carta, d)); });
+    view.appendChild(el("div", { class: "step-actions" }, [
+      el("button", { class: "secondary", text: "Voltar à missão", onclick: function () { navegar("#/cebola"); } }),
+      el("button", { class: "primary", text: "Continuar para conexões", onclick: function () { navegar("#/etapa/2"); } })
+    ]));
+  }
+
+  function hipoteseGuiada(d) {
+    var wrap = el("div", { class: "card" });
+    wrap.appendChild(el("p", { class: "helper-text", text: "Antes de ver as evidências: o que você acha que explica o problema? Depois de registrar, isso fica congelado — você só vai revê-lo na etapa de explicação." }));
+    var ta = el("textarea", { rows: 4, placeholder: "Minha hipótese inicial é..." });
+    var btn = el("button", { class: "primary", text: "Congelar hipótese e ver as evidências" });
+    btn.addEventListener("click", function () {
+      if (!ta.value.trim()) { alert("Escreva uma hipótese antes de continuar."); return; }
+      d.hipoteseInicial = { texto: ta.value.trim(), criadoEm: nowIso() };
+      setDossie(d); salvarBackup(d); rotearAgora();
     });
-    view.appendChild(lista);
+    wrap.appendChild(ta); wrap.appendChild(btn);
+    return wrap;
+  }
+
+  function cartaGuiada(carta, d) {
+    var registrada = d.evidencias.some(function (e) { return e.cartaId === carta.id && !e.descartada; });
+    var wrap = el("article", { class: "evidence-choice" });
+    wrap.appendChild(el("div", { class: "evidence-choice-top" }, [
+      el("span", { class: "pill", text: carta.tipo }),
+      registrada ? el("span", { class: "pill", text: "registrada" }) : null
+    ]));
+    wrap.appendChild(el("h3", { text: carta.titulo }));
+    wrap.appendChild(el("p", { class: "evidencia-status", text: carta.perguntaQueResponde || "O que esta evidência ajuda a entender?" }));
+    if (registrada) return wrap;
+    var btn = el("button", { class: "secondary", text: "Analisar esta evidência" });
+    btn.addEventListener("click", function () {
+      wrap.appendChild(el("p", { class: "helper-text", text: carta.conteudo || "Observe a carta e registre sua interpretação." }));
+      var vejo = el("textarea", { rows: 2, placeholder: "O que você percebe?" });
+      var indica = el("textarea", { rows: 2, placeholder: "Que consequência isso sugere?" });
+      var salvar = el("button", { class: "primary", text: "Salvar observação" });
+      salvar.addEventListener("click", function () {
+        if (!vejo.value.trim() || !indica.value.trim()) { alert("Preencha as duas observações para continuar."); return; }
+        d.evidencias.push({ id: uid(), camadaId: carta.camadaId, cartaId: carta.id, propria: false, oQueVejo: vejo.value.trim(), oQueIndica: indica.value.trim(), confianca: "media", criadoEm: nowIso() });
+        setDossie(d); salvarBackup(d); rotearAgora();
+      });
+      btn.remove(); wrap.appendChild(vejo); wrap.appendChild(indica); wrap.appendChild(salvar);
+    });
+    wrap.appendChild(btn);
+    return wrap;
+  }
+
+  function renderEtapaConexoes(view) {
+    var d = getDossie();
+    cabecalhoEtapa(view, 2, "Conecte as evidências", "Agora transforme observações em explicações. Escolha uma evidência de cada lado e confirme a relação sugerida.");
+    var receitas = [
+      { titulo: "Chuva intensa aumenta a resposta do rio", origem: 1, destino: 2, mecanismo: "A chuva intensa aumenta a entrada de água e pode elevar rapidamente a vazão." },
+      { titulo: "Cidade impermeabilizada acelera o escoamento", origem: 5, destino: 2, mecanismo: "A impermeabilização reduz a infiltração e acelera a chegada da água ao canal." },
+      { titulo: "Relevo e ocupação ampliam o risco", origem: 3, destino: 5, mecanismo: "A declividade e a ocupação de áreas baixas aproximam pessoas das áreas sujeitas à inundação." }
+    ];
+    receitas.forEach(function (receita) { view.appendChild(receitaConexao(receita, d)); });
+    view.appendChild(el("div", { class: "step-actions" }, [
+      el("button", { class: "secondary", text: "Voltar às evidências", onclick: function () { navegar("#/etapa/1"); } }),
+      el("button", { class: "primary", text: "Continuar para síntese", onclick: function () { navegar("#/etapa/3"); } })
+    ]));
+  }
+
+  function receitaConexao(receita, d) {
+    var wrap = el("article", { class: "connection-choice card" });
+    var origem = evidenciasDaCamada(d, receita.origem).filter(function (e) { return !e.descartada; });
+    var destino = evidenciasDaCamada(d, receita.destino).filter(function (e) { return !e.descartada; });
+    var existe = d.conexoes.some(function (c) { return c.origem === String(receita.origem) && c.destino === String(receita.destino) && c.mecanismo === receita.mecanismo; });
+    wrap.appendChild(el("h3", { text: receita.titulo }));
+    wrap.appendChild(el("p", { class: "evidencia-status", text: receita.mecanismo }));
+    if (existe) { wrap.appendChild(el("span", { class: "pill", text: "conexão registrada" })); return wrap; }
+    if (!origem.length || !destino.length) { wrap.appendChild(el("p", { class: "helper-text", text: "Registre primeiro uma evidência em cada lado desta relação." })); return wrap; }
+    var origemSel = selectEvidenciasGuiada(origem, "Evidência de origem");
+    var destinoSel = selectEvidenciasGuiada(destino, "Evidência de destino");
+    var btn = el("button", { class: "primary", text: "Confirmar conexão" });
+    btn.addEventListener("click", function () {
+      d.conexoes.push({ id: uid(), origem: String(receita.origem), destino: String(receita.destino), mecanismo: receita.mecanismo, evidenciaOrigemId: origemSel.value, evidenciaDestinoId: destinoSel.value, plausivel: true, criadoEm: nowIso() });
+      setDossie(d); salvarBackup(d); rotearAgora();
+    });
+    wrap.appendChild(origemSel); wrap.appendChild(destinoSel); wrap.appendChild(btn);
+    return wrap;
+  }
+
+  function selectEvidenciasGuiada(lista, label) {
+    var select = el("select", { "aria-label": label });
+    lista.forEach(function (e, i) { select.appendChild(el("option", { value: e.id, text: (i + 1) + ". " + (e.titulo || e.oQueVejo).slice(0, 54) })); });
+    return select;
+  }
+
+  function renderEtapaSintese(view) {
+    var d = getDossie();
+    cabecalhoEtapa(view, 3, "Explique o sistema", "Use suas evidências e conexões para responder ao problema. Uma boa explicação mostra mais de um caminho da água.");
+    if (d.hipoteseInicial) {
+      view.appendChild(el("div", { class: "card" }, [el("p", { class: "pill", text: "hipótese inicial" }), el("p", { text: d.hipoteseInicial.texto })]));
+    }
+    var texto = el("textarea", { rows: 6, placeholder: "O que explica o problema nesta bacia?" }); texto.value = d.sintese && d.sintese.texto || "";
+    var acao = el("textarea", { rows: 3, placeholder: "Que ação poderia reduzir o problema? Quem poderia realizá-la?" }); acao.value = d.acao && d.acao.intervencao || "";
+    var limite = el("textarea", { rows: 2, placeholder: "Que limitação ou risco essa ação tem?" }); limite.value = d.acao && d.acao.limitacao || "";
+    var mudou = el("textarea", { rows: 2, placeholder: "O que mudou desde sua hipótese inicial, e por quê?" }); mudou.value = d.revisao && d.revisao.oQueMudou || "";
+    var salvar = el("button", { class: "primary", text: "Salvar síntese" });
+    salvar.addEventListener("click", function () {
+      if (!texto.value.trim()) { alert("Escreva uma explicação antes de salvar."); return; }
+      d.sintese = { texto: texto.value.trim(), atualizadoEm: nowIso() };
+      d.acao = Object.assign({}, d.acao, { intervencao: acao.value.trim(), limitacao: limite.value.trim() });
+      if (mudou.value.trim()) d.revisao = { oQueMudou: mudou.value.trim(), porque: mudou.value.trim() };
+      setDossie(d); salvarBackup(d); rotearAgora();
+    });
+    view.appendChild(el("div", { class: "card" }, [
+      el("label", { text: "Sua explicação" }), texto,
+      el("label", { text: "Ação possível (opcional)" }), acao,
+      el("label", { text: "Limitação dessa ação (opcional)" }), limite,
+      el("label", { text: "O que mudou desde sua hipótese (opcional)" }), mudou,
+      salvar
+    ]));
+    view.appendChild(el("div", { class: "step-actions" }, [el("button", { class: "secondary", text: "Voltar às conexões", onclick: function () { navegar("#/etapa/2"); } }), el("button", { class: "primary", text: "Ver minha missão", onclick: function () { navegar("#/cebola"); } })]));
   }
 
   function svgCebola(d) {
@@ -611,6 +753,7 @@
   function bootApp() {
     registrarPwa();
     rota("cebola", renderCebola);
+    rota("etapa", renderEtapa);
     rota("camada", renderCamada);
     rota("evidencias", renderEvidencias);
     rota("conexoes", renderConexoes);
