@@ -232,7 +232,7 @@
       anel.setAttribute("cx", cx); anel.setAttribute("cy", cy); anel.setAttribute("r", raioAnel);
       anel.setAttribute("class", "anel");
       var temEvidencia = evidenciasDaCamada(d, c.id).length > 0;
-      anel.setAttribute("stroke", temEvidencia ? "#e4eeee" : "transparent");
+      anel.setAttribute("stroke", temEvidencia ? "#e5f4ee" : "transparent");
       anel.setAttribute("stroke-dasharray", temEvidencia ? "none" : "3 6");
       svg.appendChild(anel);
 
@@ -638,6 +638,8 @@
     document.getElementById("btn-importar").addEventListener("click", function () {
       document.getElementById("file-importar").click();
     });
+    document.getElementById("btn-tutorial").addEventListener("click", function () { abrirTutorial(); });
+    if (!localStorage.getItem("cda:tutorial-visto")) setTimeout(function () { abrirTutorial(); }, 250);
     document.getElementById("file-importar").addEventListener("change", function (ev) {
       var file = ev.target.files[0]; if (!file) return;
       var reader = new FileReader();
@@ -661,5 +663,52 @@
     }
   }
 
-  window.CaminhosDaAgua = { bootApp: bootApp, renderInicial: renderInicial };
+  // Tutorial curto e reutilizavel: apresenta o metodo antes de pedir qualquer resposta.
+  function abrirTutorial(inicio) {
+    var root = document.getElementById("tutorial-root");
+    if (!root) return;
+    var passos = [
+      { titulo: "Bem-vindo aos Caminhos da Água", texto: "Você vai investigar uma bacia conhecida e descobrir como água, território e sociedade se transformam mutuamente.", acao: "No fim, você terá uma explicação própria, apoiada em evidências." },
+      { titulo: "1. Comece por uma pergunta", texto: "Toda missão apresenta um problema real, como uma enchente, a falta de água ou um conflito de uso.", acao: "Leia o contexto e escreva uma hipótese antes de olhar os dados." },
+      { titulo: "2. Percorra as seis camadas", texto: "Clima, ciclo da água, relevo, ecossistemas, sociedade e gestão são caminhos diferentes para observar o mesmo sistema.", acao: "Abra cada camada e procure o que ela ajuda a explicar." },
+      { titulo: "3. Registre evidências", texto: "Uma evidência pode ser um mapa, gráfico, fotografia, medição, documento ou observação de campo.", acao: "Anote o que você vê e o que isso indica. Diferencie dado de interpretação." },
+      { titulo: "4. Crie conexões", texto: "Ligue duas camadas com uma seta e escreva o mecanismo da relação.", acao: "Lembre que o fluxo também parte do rio: ele erode, fertiliza, organiza, produz riscos e provoca decisões." },
+      { titulo: "5. Explique e proponha", texto: "Quando tiver evidências e conexões suficientes, escreva uma síntese sobre o sistema.", acao: "Depois proponha uma ação, reconheça seus limites, revise sua hipótese e exporte o dossiê." }
+    ];
+    var passoAtual = Math.min(Math.max(Number(inicio) || 0, 0), passos.length - 1);
+    var backdrop = el("div", { class: "tutorial-backdrop" });
+    var dialog = el("section", { class: "tutorial", role: "dialog", "aria-modal": "true", "aria-labelledby": "tutorial-titulo" });
+    var titulo = el("h2", { id: "tutorial-titulo", tabindex: "-1" });
+    var texto = el("p", {});
+    var acao = el("p", { class: "helper-text" });
+    var numero = el("div", { class: "tutorial-step", "aria-hidden": "true" });
+    var progresso = el("div", { class: "tutorial-progress", "aria-hidden": "true" }, [el("span", {})]);
+    var btnVoltar = el("button", { class: "secondary", text: "Voltar" });
+    var btnAvancar = el("button", { class: "primary" });
+    var btnPular = el("button", { class: "text-button", text: "Pular tutorial" });
+    var btnFechar = el("button", { class: "tutorial-close", type: "button", "aria-label": "Fechar tutorial", text: "Fechar" });
+    var actions = el("div", { class: "tutorial-actions" }, [btnPular, btnVoltar, btnAvancar]);
+    dialog.appendChild(el("div", { class: "tutorial-header" }, [el("div", {}, [el("p", { class: "eyebrow", text: "Guia rápido" }), numero]), btnFechar]));
+    dialog.appendChild(titulo); dialog.appendChild(texto); dialog.appendChild(acao); dialog.appendChild(progresso); dialog.appendChild(actions);
+    backdrop.appendChild(dialog); root.innerHTML = ""; root.appendChild(backdrop);
+
+    function fechar() { localStorage.setItem("cda:tutorial-visto", "1"); root.innerHTML = ""; }
+    function atualizar() {
+      var p = passos[passoAtual];
+      numero.textContent = String(passoAtual + 1);
+      titulo.textContent = p.titulo; texto.textContent = p.texto; acao.textContent = p.acao;
+      progresso.firstChild.style.width = ((passoAtual + 1) / passos.length * 100) + "%";
+      btnVoltar.disabled = passoAtual === 0;
+      btnAvancar.textContent = passoAtual === passos.length - 1 ? "Começar investigação" : "Próximo";
+      titulo.focus({ preventScroll: true });
+    }
+    btnVoltar.addEventListener("click", function () { if (passoAtual > 0) { passoAtual--; atualizar(); } });
+    btnAvancar.addEventListener("click", function () { if (passoAtual === passos.length - 1) fechar(); else { passoAtual++; atualizar(); } });
+    btnPular.addEventListener("click", fechar); btnFechar.addEventListener("click", fechar);
+    backdrop.addEventListener("click", function (event) { if (event.target === backdrop) fechar(); });
+    document.addEventListener("keydown", function escapar(event) { if (event.key === "Escape") { document.removeEventListener("keydown", escapar); fechar(); } });
+    atualizar();
+  }
+
+  window.CaminhosDaAgua = { bootApp: bootApp, renderInicial: renderInicial, abrirTutorial: abrirTutorial };
 })();

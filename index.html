@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Caminhos da Água</title>
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400..600;1,400..500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="assets/app.css">
 </head>
 <body>
@@ -12,7 +15,7 @@
 <main class="start-shell">
   <header class="brand-block">
     <p class="kicker">Água, território e sociedade em conexão</p>
-    <h1>Caminhos da Água</h1>
+    <h1>Caminhos da <span class="accent-word">Água</span></h1>
     <p class="lede">Investigue uma bacia como um sistema vivo: observe evidências, conecte camadas e explique os caminhos da água.</p>
   </header>
 
@@ -45,11 +48,13 @@
     <div class="action-stack">
       <button class="primary" id="btn-demo">Começar missão: Paraibuna</button>
       <button class="secondary" id="btn-importar">Importar missão (.json)</button>
+      <button class="text-button" id="btn-tutorial">Ver tutorial passo a passo</button>
     </div>
     <input type="file" id="file-importar" accept="application/json" class="hidden">
     <p class="evidencia-status">O professor também pode preparar outras bacias e compartilhar uma missão pelo arquivo JSON.</p>
   </section>
 </main>
+<div id="tutorial-root"></div>
 
 <script src="assets/app.js"></script>
 <script>CaminhosDaAgua.renderInicial();</script>
