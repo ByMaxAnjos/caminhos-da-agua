@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caminhos da Água — cartaz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400..600;1,400..500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --paper: #f7fbf8; --ink: #052e2b; --muted: #5e7772; --accent: #0e7a5f;
+    --serif: "Newsreader", Georgia, serif; --sans: "IBM Plex Sans", sans-serif; --mono: "IBM Plex Mono", monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    display: flex; align-items: center; justify-content: center;
+    background: var(--paper); color: var(--ink); font-family: var(--sans);
+  }
+  .cartaz {
+    width: min(92vw, 34rem); padding: 3rem 2.5rem; text-align: center;
+    border: 2px solid var(--ink); border-radius: 20px;
+  }
+  .kicker {
+    font-family: var(--mono); font-size: .8rem; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--accent); display: flex; align-items: center; justify-content: center; gap: .55rem;
+  }
+  .kicker::before, .kicker::after { content: ""; width: 1.6rem; height: 1px; background: currentColor; }
+  h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(2.2rem, 8vw, 3.2rem); line-height: 1; margin: .6rem 0 .3rem; }
+  h1 em { color: var(--accent); font-style: italic; font-weight: 500; }
+  .lede { font-family: var(--serif); font-size: 1.15rem; color: var(--muted); margin: 0 0 2rem; }
+  img { width: min(70vw, 15rem); height: auto; margin: 0 auto 1.5rem; display: block; }
+  .url { font-family: var(--mono); font-size: .95rem; color: var(--ink); word-break: break-all; }
+  .missao { margin-top: 1.5rem; font-size: .9rem; color: var(--muted); }
+  @media print {
+    body { min-height: auto; }
+    .cartaz { border-width: 1px; }
+  }
+</style>
+</head>
+<body>
+<div class="cartaz">
+  <p class="kicker">Água, território e sociedade</p>
+  <h1>Caminhos da <em>Água</em></h1>
+  <p class="lede">Aponte a câmera do celular para o código e comece a investigar.</p>
+  <img src="assets/qrcode-app.png" alt="QR code para abrir o aplicativo Caminhos da Água">
+  <p class="url">bymaxanjos.github.io/caminhos-da-agua</p>
+  <p class="missao">Missão de estreia: por que o rio da nossa cidade está mais sujeito a enchentes?</p>
+</div>
+</body>
+</html>
