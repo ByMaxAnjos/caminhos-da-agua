@@ -47,11 +47,15 @@
     <input type="text" id="turma" autocomplete="organization" placeholder="Ex.: equipe 3">
     <div class="action-stack">
       <button class="primary" id="btn-demo">Começar missão: Paraibuna</button>
-      <button class="secondary" id="btn-importar">Importar missão (.json)</button>
       <button class="text-button" id="btn-tutorial">Ver tutorial passo a passo</button>
     </div>
+    <details class="teacher-tools">
+      <summary>Área do professor</summary>
+      <p class="evidencia-status">Use esta opção apenas para carregar uma missão preparada previamente.</p>
+      <button class="secondary" id="btn-importar">Carregar missão do professor</button>
+    </details>
     <input type="file" id="file-importar" accept="application/json" class="hidden">
-    <p class="evidencia-status">O professor também pode preparar outras bacias e compartilhar uma missão pelo arquivo JSON.</p>
+    <p class="evidencia-status">Ao final, o aluno gera um relatório simples para entregar ou imprimir.</p>
   </section>
 </main>
 <div id="tutorial-root"></div>

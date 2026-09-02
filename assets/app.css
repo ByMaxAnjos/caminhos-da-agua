@@ -12,9 +12,9 @@
 html { background: var(--paper); }
 body { max-width: 48rem; margin: 0 auto; padding: 1.25rem 1rem 6rem; color: var(--ink); background: var(--paper); font-family: var(--sans); font-size: 1rem; line-height: 1.55; }
 h1, h2, h3, .kicker, .eyebrow, button, label, .topbar, .evidencia-status, .helper-text, .pill, .steps { font-family: var(--sans); }
-h1 { margin: .25rem 0 .5rem; color: var(--accent-dark); font-family: var(--serif); font-weight: 600; font-size: clamp(2.4rem, 9vw, 4.4rem); line-height: .98; letter-spacing: -.01em; }
+h1 { margin: .25rem 0 .5rem; color: var(--accent-dark); font-family: var(--serif); font-weight: 600; font-size: clamp(2.4rem, 9vw, 4.4rem); line-height: .98; letter-spacing: 0; }
 .accent-word { color: var(--accent); font-style: italic; font-weight: 500; }
-h2 { margin: .15rem 0 .55rem; color: var(--accent-dark); font-family: var(--serif); font-weight: 500; font-size: 1.55rem; line-height: 1.15; letter-spacing: -.01em; }
+h2 { margin: .15rem 0 .55rem; color: var(--accent-dark); font-family: var(--serif); font-weight: 500; font-size: 1.55rem; line-height: 1.15; letter-spacing: 0; }
 h3 { margin: 1.25rem 0 .45rem; font-size: 1.05rem; line-height: 1.25; }
 p { margin: .5rem 0; }
 a { color: var(--accent-dark); }
@@ -58,6 +58,8 @@ button.secondary:hover { border-color: var(--accent); background: var(--accent-s
 .text-button:hover { color: var(--warm); }
 button:disabled { opacity: .5; cursor: not-allowed; }
 .action-stack { display: grid; gap: .5rem; margin-top: .5rem; }
+.teacher-tools { margin-top: .8rem; padding-top: .7rem; border-top: 1px solid var(--rule); }
+.teacher-tools summary { color: var(--muted); cursor: pointer; font-size: .86rem; font-weight: 700; }
 .mission-context { border-left: 4px solid var(--blue); }
 .center-text { text-align: center; }
 .guided-path { display: grid; gap: .55rem; }
@@ -85,6 +87,14 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .rubrica li.ok { color: #2a6b3a; }
 .rubrica li.pendente { color: #8b471e; }
 .pontos-tipo { display: grid; grid-template-columns: 1fr auto; gap: .25rem 1rem; font-family: var(--sans); font-size: .85rem; }
+.report-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
+.report-actions button { margin: 0; }
+.report-card { margin: 1rem 0 1.6rem; padding: 1.2rem; border: 1px solid var(--rule); border-radius: 8px; background: #fff; box-shadow: 0 8px 24px rgba(5, 46, 43, .06); }
+.report-card h1 { margin-bottom: .25rem; font-size: 2rem; line-height: 1.1; }
+.report-card h2 { margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--rule); font-family: var(--sans); font-size: 1rem; font-weight: 800; }
+.report-meta, .report-empty { color: var(--muted); font-size: .9rem; }
+.report-list { padding-left: 1.2rem; }
+.report-list li { margin: .55rem 0; }
 #cebola-svg { display: block; width: 100%; max-width: 360px; height: auto; margin: 0 auto; touch-action: manipulation; }
 #cebola-svg .anel { fill: none; stroke-width: 34; }
 #cebola-svg .anel-label { fill: var(--ink); font-family: var(--mono); font-size: 10px; }
@@ -107,4 +117,11 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .tutorial-actions .text-button { margin-right: auto; }
 @media (max-width: 520px) { body { padding: .9rem .75rem 6rem; } .start-shell { padding-top: 1vh; } .steps { grid-template-columns: 1fr; } .step { min-height: 3rem; } .topbar { align-items: flex-start; flex-direction: column; gap: .15rem; } .topbar strong { max-width: 100%; } .card { padding: .9rem; } }
 @media (min-width: 700px) { body { padding-top: 2.5rem; } .start-shell { padding-top: 4vh; } .action-stack { display: flex; flex-wrap: wrap; align-items: center; } }
+@media print {
+  body { max-width: none; padding: 0; background: #fff; color: #000; }
+  .topbar, nav.tabs, .report-actions, .tutorial-backdrop { display: none !important; }
+  .report-card { margin: 0; padding: 0; border: 0; box-shadow: none; }
+  .report-card h1 { color: #000; font-size: 26pt; }
+  .report-card h2 { break-after: avoid; color: #000; }
+}
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }

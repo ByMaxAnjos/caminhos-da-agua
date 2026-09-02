@@ -176,6 +176,30 @@
     (children || []).forEach(function (c) { if (c) e.appendChild(c); });
     return e;
   }
+  function textoSeguro(valor) {
+    return String(valor || "").replace(/[&<>"']/g, function (ch) {
+      return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch];
+    });
+  }
+  function nomeArquivo(texto) {
+    return String(texto || "relatorio").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "relatorio";
+  }
+  function dataCurta(iso) {
+    var data = iso ? new Date(iso) : new Date();
+    return data.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+  }
+  function cartaPorId(id) {
+    var m = getMissao();
+    return m && m.cartas ? m.cartas.filter(function (c) { return c.id === id; })[0] : null;
+  }
+  function tituloEvidencia(e) {
+    var carta = e && e.cartaId ? cartaPorId(e.cartaId) : null;
+    return e && e.titulo || carta && carta.titulo || "Evidência";
+  }
+  function evidenciaPorId(d, id) {
+    return d.evidencias.filter(function (e) { return e.id === id; })[0] || null;
+  }
 
   // ---------- T3 · Cebola porosa ----------
   function renderCebola(_args, view) {
@@ -344,7 +368,10 @@
       el("label", { text: "O que mudou desde sua hipótese (opcional)" }), mudou,
       salvar
     ]));
-    view.appendChild(el("div", { class: "step-actions" }, [el("button", { class: "secondary", text: "Voltar às conexões", onclick: function () { navegar("#/etapa/2"); } }), el("button", { class: "primary", text: "Ver minha missão", onclick: function () { navegar("#/cebola"); } })]));
+    view.appendChild(el("div", { class: "step-actions" }, [
+      el("button", { class: "secondary", text: "Voltar às conexões", onclick: function () { navegar("#/etapa/2"); } }),
+      el("button", { class: "primary", text: "Gerar relatório final", onclick: function () { navegar("#/relatorio"); } })
+    ]));
   }
 
   function svgCebola(d) {
@@ -685,8 +712,92 @@
       } })
     ]));
 
-    view.appendChild(el("h3", { text: "Exportar dossiê" }));
-    view.appendChild(el("button", { class: "primary", text: "Baixar dossiê (JSON)", onclick: exportarDossie }));
+    view.appendChild(el("h3", { text: "Relatório final" }));
+    view.appendChild(el("button", { class: "primary", text: "Ver relatório final", onclick: function () { navegar("#/relatorio"); } }));
+  }
+
+  function renderRelatorio(_args, view) {
+    var d = getDossie(), aluno = getAluno(), m = getMissao();
+    view.appendChild(el("p", { class: "eyebrow", text: "Produto final" }));
+    view.appendChild(el("h2", { text: "Relatório da investigação" }));
+    view.appendChild(el("p", { class: "lede", text: "Este é o texto final para entregar, imprimir ou salvar em PDF." }));
+    view.appendChild(el("div", { class: "report-actions" }, [
+      el("button", { class: "primary", text: "Baixar relatório", onclick: baixarRelatorio }),
+      el("button", { class: "secondary", text: "Imprimir ou salvar PDF", onclick: function () { window.print(); } })
+    ]));
+    view.appendChild(relatorioDom(d, aluno, m));
+  }
+
+  function relatorioDom(d, aluno, m) {
+    var art = el("article", { class: "report-card" });
+    art.appendChild(el("h1", { text: "Caminhos da Água" }));
+    art.appendChild(el("p", { class: "report-meta", text: (m && m.titulo || "Missão") + " · " + dataCurta() }));
+    art.appendChild(el("p", { text: "Aluno(a)/equipe: " + (aluno && aluno.nome || "Não informado") + (aluno && aluno.turma ? " · Turma: " + aluno.turma : "") }));
+    art.appendChild(el("h2", { text: "Problema investigado" }));
+    art.appendChild(el("p", { text: m && m.perguntaProblema || "Investigar uma bacia hidrográfica como sistema socioambiental complexo." }));
+    art.appendChild(el("h2", { text: "Hipótese inicial" }));
+    art.appendChild(el("p", { text: d.hipoteseInicial && d.hipoteseInicial.texto || "Não registrada." }));
+    art.appendChild(el("h2", { text: "Evidências observadas" }));
+    var evidencias = d.evidencias.filter(function (e) { return !e.descartada; });
+    art.appendChild(listaRelatorio(evidencias, function (e) {
+      return tituloEvidencia(e) + " — " + nodeNome(e.camadaId) + ". Percebi: " + e.oQueVejo + " Consequência: " + e.oQueIndica;
+    }, "Nenhuma evidência registrada."));
+    art.appendChild(el("h2", { text: "Conexões entre camadas" }));
+    art.appendChild(listaRelatorio(conexoesSustentadas(d), function (c) {
+      var evO = evidenciaPorId(d, c.evidenciaOrigemId);
+      var evD = evidenciaPorId(d, c.evidenciaDestinoId);
+      return nodeNome(c.origem) + " → " + nodeNome(c.destino) + ": " + c.mecanismo +
+        " Evidências: " + (evO ? tituloEvidencia(evO) : "origem não informada") + " + " + (evD ? tituloEvidencia(evD) : "destino não informado") + ".";
+    }, "Nenhuma conexão sustentada registrada."));
+    art.appendChild(el("h2", { text: "Explicação final" }));
+    art.appendChild(el("p", { text: d.sintese && d.sintese.texto || "Síntese ainda não escrita." }));
+    art.appendChild(el("h2", { text: "Ação proposta" }));
+    art.appendChild(el("p", { text: d.acao && d.acao.intervencao || "Nenhuma ação proposta." }));
+    if (d.acao && d.acao.limitacao) art.appendChild(el("p", { text: "Limitação: " + d.acao.limitacao }));
+    if (d.revisao && d.revisao.oQueMudou) {
+      art.appendChild(el("h2", { text: "Revisão da hipótese" }));
+      art.appendChild(el("p", { text: d.revisao.oQueMudou }));
+    }
+    return art;
+  }
+
+  function listaRelatorio(itens, textoItem, vazio) {
+    if (!itens.length) return el("p", { class: "report-empty", text: vazio });
+    var ul = el("ul", { class: "report-list" });
+    itens.forEach(function (item) { ul.appendChild(el("li", { text: textoItem(item) })); });
+    return ul;
+  }
+
+  function htmlRelatorio() {
+    var d = getDossie(), aluno = getAluno(), m = getMissao();
+    var evidencias = d.evidencias.filter(function (e) { return !e.descartada; });
+    var conexoes = conexoesSustentadas(d);
+    function li(lista, fn, vazio) {
+      if (!lista.length) return "<p>" + textoSeguro(vazio) + "</p>";
+      return "<ul>" + lista.map(function (item) { return "<li>" + textoSeguro(fn(item)) + "</li>"; }).join("") + "</ul>";
+    }
+    return "<!doctype html><html lang=\"pt-BR\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">" +
+      "<title>Relatório Caminhos da Água</title><style>body{max-width:760px;margin:0 auto;padding:32px 20px;color:#052e2b;font:16px/1.6 Arial,sans-serif}h1,h2{line-height:1.15}h1{font-size:34px}h2{margin-top:28px;border-top:1px solid #d9e8e2;padding-top:18px}li{margin:10px 0}.meta{color:#5e7772}@media print{body{padding:0}button{display:none}}</style></head><body>" +
+      "<h1>Caminhos da Água</h1><p class=\"meta\">" + textoSeguro(m && m.titulo || "Missão") + " · " + textoSeguro(dataCurta()) + "</p>" +
+      "<p><strong>Aluno(a)/equipe:</strong> " + textoSeguro(aluno && aluno.nome || "Não informado") + (aluno && aluno.turma ? " · <strong>Turma:</strong> " + textoSeguro(aluno.turma) : "") + "</p>" +
+      "<h2>Problema investigado</h2><p>" + textoSeguro(m && m.perguntaProblema || "Investigar uma bacia hidrográfica como sistema socioambiental complexo.") + "</p>" +
+      "<h2>Hipótese inicial</h2><p>" + textoSeguro(d.hipoteseInicial && d.hipoteseInicial.texto || "Não registrada.") + "</p>" +
+      "<h2>Evidências observadas</h2>" + li(evidencias, function (e) { return tituloEvidencia(e) + " — " + nodeNome(e.camadaId) + ". Percebi: " + e.oQueVejo + " Consequência: " + e.oQueIndica; }, "Nenhuma evidência registrada.") +
+      "<h2>Conexões entre camadas</h2>" + li(conexoes, function (c) { var evO = evidenciaPorId(d, c.evidenciaOrigemId); var evD = evidenciaPorId(d, c.evidenciaDestinoId); return nodeNome(c.origem) + " → " + nodeNome(c.destino) + ": " + c.mecanismo + " Evidências: " + (evO ? tituloEvidencia(evO) : "origem não informada") + " + " + (evD ? tituloEvidencia(evD) : "destino não informado") + "."; }, "Nenhuma conexão sustentada registrada.") +
+      "<h2>Explicação final</h2><p>" + textoSeguro(d.sintese && d.sintese.texto || "Síntese ainda não escrita.") + "</p>" +
+      "<h2>Ação proposta</h2><p>" + textoSeguro(d.acao && d.acao.intervencao || "Nenhuma ação proposta.") + "</p>" +
+      (d.acao && d.acao.limitacao ? "<p><strong>Limitação:</strong> " + textoSeguro(d.acao.limitacao) + "</p>" : "") +
+      (d.revisao && d.revisao.oQueMudou ? "<h2>Revisão da hipótese</h2><p>" + textoSeguro(d.revisao.oQueMudou) + "</p>" : "") +
+      "</body></html>";
+  }
+
+  function baixarRelatorio() {
+    var aluno = getAluno();
+    var blob = new Blob([htmlRelatorio()], { type: "text/html;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "relatorio-caminhos-da-agua-" + nomeArquivo(aluno && aluno.nome || "aluno") + ".html";
+    document.body.appendChild(a); a.click(); a.remove();
   }
 
   function exportarDossie() {
@@ -729,7 +840,12 @@
     if (!conquistas.length) view.appendChild(el("p", { class: "evidencia-status", text: "Nenhuma ainda." }));
     conquistas.forEach(function (c) { view.appendChild(el("p", {}, [el("span", { class: "pill", text: c })])); });
 
-    view.appendChild(el("button", { class: "secondary", text: "Exportar dossiê", onclick: exportarDossie }));
+    view.appendChild(el("button", { class: "primary", text: "Ver relatório final", onclick: function () { navegar("#/relatorio"); } }));
+    view.appendChild(el("details", { class: "teacher-tools" }, [
+      el("summary", { text: "Exportação técnica" }),
+      el("p", { class: "evidencia-status", text: "Arquivo para backup ou análise do professor, não necessário para a entrega dos alunos." }),
+      el("button", { class: "secondary", text: "Baixar dados técnicos", onclick: exportarDossie })
+    ]));
     view.appendChild(el("button", { class: "secondary", text: "Apagar todos os dados deste aparelho", onclick: function () {
       if (confirm("Isso apaga o dossiê deste aparelho. Exportou antes?")) { localStorage.clear(); location.href = "index.html"; }
     } }));
@@ -758,6 +874,7 @@
     rota("evidencias", renderEvidencias);
     rota("conexoes", renderConexoes);
     rota("sintese", renderSintese);
+    rota("relatorio", renderRelatorio);
     rota("perfil", renderPerfil);
     window.addEventListener("hashchange", rotearAgora);
     rotearAgora();
@@ -816,7 +933,7 @@
       { titulo: "2. Percorra as seis camadas", texto: "Clima, ciclo da água, relevo, ecossistemas, sociedade e gestão são caminhos diferentes para observar o mesmo sistema.", acao: "Abra cada camada e procure o que ela ajuda a explicar." },
       { titulo: "3. Registre evidências", texto: "Uma evidência pode ser um mapa, gráfico, fotografia, medição, documento ou observação de campo.", acao: "Anote o que você vê e o que isso indica. Diferencie dado de interpretação." },
       { titulo: "4. Crie conexões", texto: "Ligue duas camadas com uma seta e escreva o mecanismo da relação.", acao: "Lembre que o fluxo também parte do rio: ele erode, fertiliza, organiza, produz riscos e provoca decisões." },
-      { titulo: "5. Explique e proponha", texto: "Quando tiver evidências e conexões suficientes, escreva uma síntese sobre o sistema.", acao: "Depois proponha uma ação, reconheça seus limites, revise sua hipótese e exporte o dossiê." }
+      { titulo: "5. Explique e proponha", texto: "Quando tiver evidências e conexões suficientes, escreva uma síntese sobre o sistema.", acao: "Depois proponha uma ação, reconheça seus limites e gere o relatório final." }
     ];
     var passoAtual = Math.min(Math.max(Number(inicio) || 0, 0), passos.length - 1);
     var backdrop = el("div", { class: "tutorial-backdrop" });
