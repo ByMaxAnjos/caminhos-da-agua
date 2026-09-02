@@ -929,11 +929,10 @@
     if (!root) return;
     var passos = [
       { titulo: "Bem-vindo aos Caminhos da Água", texto: "Você vai investigar uma bacia conhecida e descobrir como água, território e sociedade se transformam mutuamente.", acao: "No fim, você terá uma explicação própria, apoiada em evidências." },
-      { titulo: "1. Comece por uma pergunta", texto: "Toda missão apresenta um problema real, como uma enchente, a falta de água ou um conflito de uso.", acao: "Leia o contexto e escreva uma hipótese antes de olhar os dados." },
-      { titulo: "2. Percorra as seis camadas", texto: "Clima, ciclo da água, relevo, ecossistemas, sociedade e gestão são caminhos diferentes para observar o mesmo sistema.", acao: "Abra cada camada e procure o que ela ajuda a explicar." },
-      { titulo: "3. Registre evidências", texto: "Uma evidência pode ser um mapa, gráfico, fotografia, medição, documento ou observação de campo.", acao: "Anote o que você vê e o que isso indica. Diferencie dado de interpretação." },
-      { titulo: "4. Crie conexões", texto: "Ligue duas camadas com uma seta e escreva o mecanismo da relação.", acao: "Lembre que o fluxo também parte do rio: ele erode, fertiliza, organiza, produz riscos e provoca decisões." },
-      { titulo: "5. Explique e proponha", texto: "Quando tiver evidências e conexões suficientes, escreva uma síntese sobre o sistema.", acao: "Depois proponha uma ação, reconheça seus limites e gere o relatório final." }
+      { titulo: "1. Comece por uma pergunta", texto: "Toda missão apresenta um problema real, como uma enchente, a falta de água ou um conflito de uso.", acao: "Antes de ver qualquer evidência, escreva sua hipótese: o que você acha que explica o problema?" },
+      { titulo: "2. Observe as evidências", texto: "Cada missão traz cartas de evidência: mapas, gráficos, fotos, documentos, dados de campo.", acao: "Analise pelo menos três. Para cada uma, anote o que você vê e que consequência isso sugere." },
+      { titulo: "3. Conecte as evidências", texto: "O app sugere relações causais prontas, como \"a impermeabilização acelera o escoamento\". Você escolhe qual evidência sustenta cada lado.", acao: "Lembre que o rio também é agente: ele erode, organiza a cidade, produz riscos e provoca decisões." },
+      { titulo: "4. Explique e proponha", texto: "Quando tiver evidências e conexões suficientes, escreva uma síntese sobre o sistema.", acao: "Depois proponha uma ação, reconheça seus limites e gere o relatório final." }
     ];
     var passoAtual = Math.min(Math.max(Number(inicio) || 0, 0), passos.length - 1);
     var backdrop = el("div", { class: "tutorial-backdrop" });
