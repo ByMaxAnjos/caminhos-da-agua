@@ -36,6 +36,25 @@
   var TETO_EVIDENCIA_POR_CAMADA = 6;
   var TETO_CONEXAO_POR_PAR = 3;
 
+  // Percurso curricular: cada modulo prepara uma habilidade usada na missao integradora.
+  var MODULOS = [
+    { id: "i1", unidade: "Unidade I", titulo: "Onde está a água?", foco: "Distribuição e disponibilidade hídrica", objetivo: "Distinguir a presença de água da disponibilidade de água para diferentes usos.", exemplo: "O Brasil possui muita água, mas essa água não está distribuída igualmente no território nem chega igualmente às pessoas.", desafio: "Escolha uma cidade e escreva uma diferença entre ter água no território e ter água disponível para a população.", pergunta: "Qual afirmação é mais adequada?", opcoes: ["Toda água existente está disponível para consumo.", "Disponibilidade depende de quantidade, qualidade, acesso e usos concorrentes.", "A água só é um problema em regiões desérticas."], correta: 1, feedback: "Disponibilidade é uma relação entre oferta, qualidade, acesso, infraestrutura e demandas." },
+    { id: "i2", unidade: "Unidade I", titulo: "Águas superficiais e subterrâneas", foco: "Hidrologia básica", objetivo: "Reconhecer que rios, lagos, nascentes e aquíferos fazem parte de um sistema conectado.", exemplo: "A vazão de um rio na estiagem pode receber contribuição subterrânea, enquanto a impermeabilização reduz a recarga do solo.", desafio: "Observe seu bairro: indique um lugar onde a água infiltra e outro onde ela escoa rapidamente.", pergunta: "O que melhor descreve um aquífero?", opcoes: ["Uma camada ou formação que armazena e transmite água subterrânea.", "Qualquer poça formada depois da chuva.", "Somente a água presente em rios."], correta: 0, feedback: "Aquíferos são formações geológicas capazes de armazenar e transmitir água subterrânea." },
+    { id: "i3", unidade: "Unidade I", titulo: "Do ciclo hidrológico ao hidrossocial", foco: "Água, natureza e sociedade", objetivo: "Explicar como processos físicos e decisões sociais reorganizam os caminhos da água.", exemplo: "Uma avenida, uma barragem ou uma rede de abastecimento altera tempos, volumes, acessos e riscos no ciclo da água.", desafio: "Complete: uma obra urbana muda o caminho da água porque...", pergunta: "O ciclo hidrossocial acrescenta ao ciclo hidrológico a análise de...", opcoes: ["Apenas a evaporação.", "Poder, infraestrutura, usos, conflitos e desigualdades.", "Somente a vida dos peixes."], correta: 1, feedback: "O ciclo hidrossocial evidencia que a água também é produzida, distribuída e disputada socialmente." },
+    { id: "i4", unidade: "Unidade I", titulo: "Água, economia e geopolítica", foco: "Usos múltiplos, água virtual e conflitos", objetivo: "Relacionar consumo, produção, circulação de mercadorias e disputas pela água.", exemplo: "Um produto agrícola consumido longe de sua origem carrega água virtual e pode transferir pressões ambientais entre territórios.", desafio: "Escolha um produto cotidiano e formule uma pergunta sobre a água usada para produzi-lo.", pergunta: "Água virtual é...", opcoes: ["A água invisível na atmosfera.", "O volume de água usado direta e indiretamente na produção de um bem.", "A água subterrânea que não pode ser medida."], correta: 1, feedback: "Água virtual ajuda a enxergar relações entre produção, comércio, consumo e pressão hídrica." },
+    { id: "ii1", unidade: "Unidade II", titulo: "A bacia como unidade de análise", foco: "Hierarquia fluvial e sistema hidrológico", objetivo: "Ler a bacia como área de contribuição e sistema de entradas, caminhos, armazenamentos e saídas.", exemplo: "O Rio Paraibuna reúne contribuições de afluentes e atravessa diferentes formas de ocupação até deixar a área de estudo.", desafio: "Desenhe com palavras o caminho de uma gota desde uma encosta até o rio principal.", pergunta: "Uma bacia hidrográfica é delimitada principalmente por...", opcoes: ["Divisores topográficos do relevo.", "Limites dos bairros.", "A extensão da rede de abastecimento."], correta: 0, feedback: "O divisor de águas separa áreas que drenam para saídas diferentes." },
+    { id: "ii2", unidade: "Unidade II", titulo: "Delimitar e representar no SIG", foco: "MDE, bacia e perfil topográfico", objetivo: "Entender a sequência lógica da delimitação de uma bacia e da leitura do relevo em SIG.", exemplo: "No QGIS, um modelo digital de elevação permite identificar direção do fluxo, acumulação e o divisor da bacia.", desafio: "Ordene mentalmente: ponto de saída, direção do fluxo, acumulação, delimitação e conferência no mapa.", pergunta: "O que o perfil topográfico ajuda a interpretar?", opcoes: ["A variação de altitude ao longo de um trajeto.", "A qualidade química da água sozinho.", "O volume exato de chuva sem estação."], correta: 0, feedback: "O perfil mostra a forma do relevo ao longo de uma linha e apoia a interpretação do escoamento." },
+    { id: "ii3", unidade: "Unidade II", titulo: "Medir a água", foco: "Pluviometria, fluviometria e vazão", objetivo: "Diferenciar chuva, nível, velocidade e vazão e reconhecer o papel das séries de dados.", exemplo: "Uma régua de nível não mede diretamente a vazão; é preciso relacionar nível e descarga por uma curva-chave ou medição apropriada.", desafio: "Liste dois dados que você coletaria antes de comparar a resposta de dois córregos.", pergunta: "Vazão corresponde a...", opcoes: ["Volume de água que passa por uma seção por unidade de tempo.", "Altura da margem acima do mar.", "Quantidade de lixo visível na água."], correta: 0, feedback: "Vazão é uma grandeza de fluxo, geralmente expressa em m³/s ou L/s." },
+    { id: "ii4", unidade: "Unidade II", titulo: "Comparar bacias", foco: "Análise morfométrica", objetivo: "Usar forma, área, perímetro, hierarquia e relevo para comparar respostas hidrológicas.", exemplo: "Bacias menores, íngremes e com menor infiltração podem responder mais rapidamente a chuvas intensas, mas a interpretação depende do conjunto de fatores.", desafio: "Explique por que um único índice morfométrico não basta para prever uma inundação.", pergunta: "A morfometria serve para...", opcoes: ["Descrever e comparar características geométricas e do relevo da bacia.", "Substituir toda observação de campo.", "Definir sozinha quem tem direito à água."], correta: 0, feedback: "Índices são evidências úteis, mas precisam ser articulados a clima, uso do solo, solos, rede e sociedade." },
+    { id: "ii5", unidade: "Unidade II", titulo: "Quem decide sobre a água?", foco: "Lei das Águas e gestão participativa", objetivo: "Reconhecer instrumentos, atores e conflitos na governança das águas.", exemplo: "Comitês de bacia reúnem usuários, poder público e sociedade civil para discutir problemas e prioridades de gestão.", desafio: "Escolha um conflito hídrico e identifique três atores que deveriam participar da decisão.", pergunta: "A gestão participativa busca...", opcoes: ["Concentrar toda decisão em um único usuário.", "Articular diferentes interesses e responsabilidades na bacia.", "Eliminar a necessidade de dados."], correta: 1, feedback: "Participação não elimina conflitos; cria espaço institucional para debatê-los com informação e responsabilidade." },
+    { id: "ii-lab", unidade: "Unidade II", tipo: "laboratorio", titulo: "Laboratório da Bacia", foco: "Simular cenários e observar respostas do sistema", objetivo: "Manipular condições do território e comparar como a bacia responde a diferentes combinações de chuva, urbanização, margens e gestão.", exemplo: "Uma mesma chuva pode produzir respostas distintas quando mudam a infiltração, a ocupação e a preparação do território.", desafio: "Crie dois cenários: um com alto risco e outro com maior segurança. Explique o que mudou.", pergunta: "O laboratório é uma simplificação para formular hipóteses, não uma previsão automática.", opcoes: ["Verdadeiro: o modelo ajuda a pensar relações e deve ser confrontado com dados reais.", "Falso: o resultado substitui trabalho de campo e dados históricos.", "Verdadeiro: qualquer combinação representa uma medição real."], correta: 0, feedback: "Modelos didáticos ajudam a raciocinar sobre mecanismos, mas precisam ser confrontados com observações e dados." },
+    { id: "ii6", unidade: "Unidade II", titulo: "Investigar em campo", foco: "Observação, amostragem e caderno de campo", objetivo: "Planejar uma observação que conecte hipótese, local, dado, registro e interpretação.", exemplo: "No Paraibuna e nos córregos Ipiranga e Teixeiras, a comparação entre pontos pode revelar diferenças de margem, uso do solo e qualidade da água.", desafio: "Escreva uma hipótese testável para dois pontos do mesmo curso d'água.", pergunta: "Uma boa hipótese de campo deve ser...", opcoes: ["Impossível de verificar.", "Clara, localizada e relacionada a evidências observáveis.", "Apenas uma opinião sem relação com o lugar."], correta: 1, feedback: "A hipótese orienta o que observar e pode ser revista quando os dados contradizem a expectativa." },
+    { id: "iii1", unidade: "Unidade III", titulo: "Ler a qualidade da água", foco: "Parâmetros e indicadores", objetivo: "Interpretar pH, temperatura, turbidez, condutividade e outros indicadores sem reduzir a qualidade a um único número.", exemplo: "Turbidez elevada pode indicar sedimentos, mas sua causa precisa ser relacionada a chuva, erosão, obras, margens e usos do solo.", desafio: "Escolha dois parâmetros e explique por que observá-los juntos é mais informativo.", pergunta: "Um indicador de qualidade deve ser interpretado...", opcoes: ["Sem contexto, sempre da mesma maneira.", "Com método, referência, local, data e demais evidências.", "Apenas pela cor da água."], correta: 1, feedback: "O significado de uma medida depende do método e do contexto físico e social da coleta." },
+    { id: "iii2", unidade: "Unidade III", titulo: "Saneamento e poluição", foco: "Escoamento urbano e saúde", objetivo: "Relacionar infraestrutura, poluição difusa, esgoto e desigualdade socioambiental.", exemplo: "A chuva pode carregar sedimentos, óleo e resíduos das ruas para os canais; a ausência de saneamento adiciona outra pressão ao sistema.", desafio: "Mapeie uma fonte potencial de poluição e uma ação preventiva possível.", pergunta: "O escoamento superficial urbano tende a...", opcoes: ["Carregar materiais da superfície para a drenagem e os corpos d'água.", "Impedir qualquer poluente de chegar ao rio.", "Acontecer somente em áreas rurais."], correta: 0, feedback: "A drenagem conecta superfícies urbanas aos canais, especialmente durante chuvas intensas." },
+    { id: "iii3", unidade: "Unidade III", titulo: "Cheias, secas e mudanças climáticas", foco: "Risco e vulnerabilidade", objetivo: "Diferenciar perigo, exposição, vulnerabilidade e risco na análise de eventos extremos.", exemplo: "A mesma chuva pode produzir impactos diferentes conforme a impermeabilização, a ocupação da várzea, a qualidade da drenagem e a capacidade de resposta.", desafio: "Explique por que uma chuva intensa não causa o mesmo dano em todos os bairros.", pergunta: "Risco hidrológico resulta da relação entre...", opcoes: ["Perigo, exposição e vulnerabilidade.", "Apenas volume de chuva.", "Somente altitude."], correta: 0, feedback: "O evento físico importa, mas o risco também depende de quem está exposto e de suas condições de proteção e resposta." },
+    { id: "iii4", unidade: "Unidade III", titulo: "Comunicar uma análise", foco: "Pôster, laudo e defesa do estudo de caso", objetivo: "Transformar dados e argumentos em uma comunicação científica clara para públicos diferentes.", exemplo: "O projeto final deve explicar a dinâmica do Paraibuna e afluentes articulando mapa, dados hidrológicos, qualidade da água, ocupação e risco.", desafio: "Escreva uma frase de conclusão que una evidência, mecanismo e consequência.", pergunta: "Uma boa conclusão deve...", opcoes: ["Repetir o título sem evidência.", "Responder à pergunta com dados, limites e implicações.", "Esconder resultados que contradizem a hipótese."], correta: 1, feedback: "Comunicação científica mostra como se chegou à conclusão e reconhece limites da análise." }
+  ];
+
   var NIVEIS = [
     { n: 1, titulo: "Observador de campo", req: function (d) { return !!d.hipoteseInicial && contarEvidencias(d) >= 3; } },
     { n: 2, titulo: "Investigador de camada", req: function (d) { return camadasComEvidencia(d).length >= 4; } },
@@ -66,6 +85,37 @@
     // ponytail: um backup simples sobrescrito, não histórico completo (§10.4) — suficiente
     // para não perder o dossiê entre o campo e a entrega; histórico fica para a v1.0.
     localStorage.setItem("cda:dossie:backup", JSON.stringify({ em: nowIso(), dossie: d }));
+  }
+
+  function modulosConcluidos() {
+    try { return JSON.parse(localStorage.getItem("cda:modulos") || "[]"); } catch (e) { return []; }
+  }
+  function getRespostaDesafio(moduloId) {
+    try { return JSON.parse(localStorage.getItem("cda:desafios") || "{}")[moduloId] || ""; } catch (e) { return ""; }
+  }
+  function setRespostaDesafio(moduloId, texto) {
+    var todas; try { todas = JSON.parse(localStorage.getItem("cda:desafios") || "{}"); } catch (e) { todas = {}; }
+    todas[moduloId] = texto;
+    localStorage.setItem("cda:desafios", JSON.stringify(todas));
+  }
+  function marcarModulo(id) {
+    var feitos = modulosConcluidos();
+    if (feitos.indexOf(id) < 0) feitos.push(id);
+    localStorage.setItem("cda:modulos", JSON.stringify(feitos));
+  }
+  function laboratorioVazio() { return { chuva: 2, cidade: 2, margens: 2, gestao: 1 }; }
+  function getLaboratorio() {
+    try { return Object.assign(laboratorioVazio(), JSON.parse(localStorage.getItem("cda:laboratorio") || "{}")); }
+    catch (e) { return laboratorioVazio(); }
+  }
+  function setLaboratorio(c) { localStorage.setItem("cda:laboratorio", JSON.stringify(c)); }
+  function limitar(n) { return Math.max(0, Math.min(100, Math.round(n))); }
+  function resultadoLaboratorio(c) {
+    var escoamento = limitar(25 + c.chuva * 18 + c.cidade * 14 - c.margens * 10 - c.gestao * 6);
+    var infiltracao = limitar(78 - c.cidade * 15 + c.margens * 11 + c.gestao * 4);
+    var qualidade = limitar(86 - c.cidade * 14 - c.chuva * 5 + c.margens * 12 + c.gestao * 5);
+    var risco = limitar(18 + c.chuva * 19 + c.cidade * 13 - c.margens * 8 - c.gestao * 10);
+    return { escoamento: escoamento, infiltracao: infiltracao, qualidade: qualidade, risco: risco };
   }
 
   // ---------- Utilidades de domínio ----------
@@ -231,6 +281,175 @@
       el("span", {}, [el("strong", { text: titulo }), el("small", { text: texto })]),
       el("span", { class: "guided-arrow", text: "→", "aria-hidden": "true" })
     ]);
+  }
+
+  // ---------- Percurso da disciplina ----------
+  function renderCurso(_args, view) {
+    var feitos = modulosConcluidos();
+    var total = MODULOS.length;
+    view.appendChild(el("p", { class: "eyebrow", text: "Percurso da disciplina" }));
+    view.appendChild(el("h2", { text: "Hidrogeografia em movimento" }));
+    view.appendChild(el("p", { class: "lede", text: "Aprenda os conceitos, teste ideias e use tudo na investigação do Paraibuna. Você pode avançar no seu ritmo." }));
+    view.appendChild(el("div", { class: "card course-summary" }, [
+      el("p", { class: "pill", text: feitos.length + " de " + total + " módulos" }),
+      el("p", { text: "O percurso começa nos fundamentos, passa pela bacia e pelo campo e chega à qualidade da água, aos riscos e à comunicação científica." }),
+      el("div", { class: "guided-progress", "aria-label": "Progresso do percurso" }, [el("span", { style: "width: " + (feitos.length / total * 100) + "%" })])
+    ]));
+    var unidades = {
+      "Unidade I": { nome: "Ler a água", texto: "Comece pelo planeta, pelo ciclo e pelas disputas que dão sentido à água." },
+      "Unidade II": { nome: "Investigar a bacia", texto: "Desça do mapa para o relevo, os instrumentos, o campo e as decisões." },
+      "Unidade III": { nome: "Cuidar do território", texto: "Interprete qualidade, saneamento e risco para comunicar uma ação possível." }
+    };
+    ["Unidade I", "Unidade II", "Unidade III"].forEach(function (unidade, unidadeIndex) {
+      var itens = MODULOS.filter(function (m) { return m.unidade === unidade; });
+      var completos = itens.filter(function (m) { return feitos.indexOf(m.id) >= 0; }).length;
+      view.appendChild(el("section", { class: "unit-journey" }, [
+        el("div", { class: "unit-heading" }, [el("span", { class: "unit-marker", text: String(unidadeIndex + 1) }), el("div", {}, [el("p", { class: "eyebrow", text: unidade }), el("h3", { text: unidades[unidade].nome }), el("p", { class: "helper-text", text: unidades[unidade].texto })]), el("span", { class: "unit-count", text: completos + "/" + itens.length })]),
+        el("div", { class: "module-list" }, itens.map(function (m, moduleIndex) {
+        var done = feitos.indexOf(m.id) >= 0;
+        return el("a", { class: "module-item" + (done ? " done" : ""), href: "#/modulo/" + m.id }, [
+          el("span", { class: "module-number", text: done ? "✓" : String(moduleIndex + 1), "aria-hidden": "true" }),
+          el("span", {}, [el("strong", { text: m.titulo }), el("small", { text: m.foco }), m.tipo === "laboratorio" ? el("span", { class: "module-tag", text: "experiência prática" }) : null]),
+          el("span", { class: "guided-arrow", text: "→", "aria-hidden": "true" })
+        ]);
+      }))
+      ]));
+    });
+    view.appendChild(el("div", { class: "card mission-context" }, [
+      el("p", { class: "eyebrow", text: "Projeto integrador" }),
+      el("p", { text: "Depois dos módulos, entre na Missão para analisar uma situação real, registrar evidências, conectar camadas e gerar seu relatório final." }),
+      el("button", { class: "primary", text: "Ir para a missão", onclick: function () { navegar("#/cebola"); } })
+    ]));
+  }
+
+  function renderLaboratorio(_args, view, modulo) {
+    var c = getLaboratorio();
+    var r = resultadoLaboratorio(c);
+    view.appendChild(el("p", { class: "eyebrow", text: modulo ? modulo.unidade + " · Módulo prático" : "Laboratório da Bacia" }));
+    view.appendChild(el("h2", { text: "E se o território mudasse?" }));
+    view.appendChild(el("p", { class: "lede", text: "Faça uma hipótese com as mãos: ajuste quatro condições e observe o sistema responder. O modelo é uma lente de investigação, não uma previsão real." }));
+    view.appendChild(el("div", { class: "card lab-brief" }, [
+      el("p", { class: "pill", text: "desafio" }),
+      el("h3", { text: "Crie uma bacia mais segura" }),
+      el("p", { text: "Reduza o risco sem eliminar a chuva. Que combinação de ações mantém água no território, protege a qualidade e diminui a exposição?" })
+    ]));
+    var controls = el("div", { class: "card lab-controls" });
+    controls.appendChild(el("h3", { text: "Monte o cenário" }));
+    var campos = [
+      ["chuva", "Intensidade da chuva", ["baixa", "moderada", "intensa"]],
+      ["cidade", "Urbanização e impermeabilização", ["baixa", "média", "alta"]],
+      ["margens", "Vegetação e proteção das margens", ["degradada", "em recuperação", "protegida"]],
+      ["gestao", "Gestão e preparação", ["reativa", "planejada", "integrada"]]
+    ];
+    campos.forEach(function (campo) {
+      var row = el("div", { class: "lab-control" });
+      var label = el("label", { text: campo[1] });
+      var value = el("output", { text: campo[2][c[campo[0]] - 1] });
+      label.appendChild(value);
+      var input = el("input", { type: "range", min: "1", max: "3", step: "1", value: String(c[campo[0]]), "aria-label": campo[1] });
+      input.addEventListener("input", function () { c[campo[0]] = Number(input.value); value.textContent = campo[2][c[campo[0]] - 1]; atualizarLaboratorio(); });
+      row.appendChild(label); row.appendChild(input); controls.appendChild(row);
+    });
+    view.appendChild(controls);
+    var painel = el("div", { class: "lab-results" });
+    view.appendChild(painel);
+    function barra(titulo, valor, classe, explicacao) {
+      var item = el("div", { class: "lab-result" });
+      item.appendChild(el("div", { class: "lab-result-head" }, [el("strong", { text: titulo }), el("span", { text: valor + "/100" })]));
+      item.appendChild(el("div", { class: "lab-meter" }, [el("span", { class: classe, style: "width: " + valor + "%" })]));
+      item.appendChild(el("small", { text: explicacao }));
+      return item;
+    }
+    function atualizarLaboratorio() {
+      setLaboratorio(c); r = resultadoLaboratorio(c); painel.innerHTML = "";
+      painel.appendChild(el("div", { class: "card lab-results-card" }, [
+        el("p", { class: "pill", text: "resposta do sistema" }),
+        barra("Escoamento superficial", r.escoamento, "meter-warm", "Quanto maior, mais água chega rapidamente aos canais."),
+        barra("Infiltração e armazenamento", r.infiltracao, "meter-blue", "Maior infiltração ajuda a retardar o escoamento e sustentar a estiagem."),
+        barra("Qualidade potencial", r.qualidade, "meter-green", "Uma leitura comparativa influenciada por cobertura, chuva e gestão."),
+        barra("Risco hidrológico", r.risco, "meter-coral", "Combinação simplificada de perigo, exposição e vulnerabilidade."),
+        el("p", { class: "lab-reading", text: leituraLaboratorio(r) })
+      ]));
+      painel.appendChild(el("div", { class: "step-actions" }, [
+        el("button", { class: "secondary", text: "Salvar cenário no diário", onclick: salvarCenario }),
+        el("button", { class: "primary", text: "Levar hipótese à missão", onclick: function () { navegar("#/cebola"); } })
+      ]));
+      var diarios = getCenarios();
+      if (diarios.length) {
+        painel.appendChild(el("h3", { text: "Diário de cenários" }));
+        diarios.slice(0, 3).forEach(function (item) { painel.appendChild(el("div", { class: "scenario-log card" }, [el("strong", { text: item.nome }), el("small", { text: "Risco " + item.resultado.risco + "/100 · infiltração " + item.resultado.infiltracao + "/100" })])); });
+      }
+    }
+    function salvarCenario() {
+      var lista = getCenarios();
+      lista.unshift({ nome: "Cenário " + (lista.length + 1), resultado: resultadoLaboratorio(c), criadoEm: nowIso() });
+      localStorage.setItem("cda:cenarios", JSON.stringify(lista.slice(0, 8)));
+      marcarModulo("ii-lab");
+      atualizarLaboratorio();
+    }
+    atualizarLaboratorio();
+  }
+  function getCenarios() { try { return JSON.parse(localStorage.getItem("cda:cenarios") || "[]"); } catch (e) { return []; } }
+  function leituraLaboratorio(r) {
+    if (r.risco >= 65) return "Este cenário concentra uma resposta rápida e maior risco. Investigue qual camada está pressionando o sistema e quem está mais exposto.";
+    if (r.infiltracao >= 65 && r.qualidade >= 65) return "Este cenário retém mais água e protege melhor a qualidade. Pergunte quais políticas e usos do solo tornariam isso possível.";
+    return "O sistema está em uma condição intermediária. Compare este cenário com outro e procure a combinação que explica a diferença.";
+  }
+
+  function renderModulo(args, view) {
+    var modulo = MODULOS.filter(function (m) { return m.id === args[0]; })[0];
+    if (!modulo) { renderCurso([], view); return; }
+    if (modulo.tipo === "laboratorio") return renderLaboratorio([], view, modulo);
+    var feitos = modulosConcluidos();
+    var respondida = null;
+    view.appendChild(el("p", { class: "eyebrow", text: modulo.unidade + " · Módulo " + modulo.id.toUpperCase() }));
+    view.appendChild(el("h2", { text: modulo.titulo }));
+    view.appendChild(el("p", { class: "lede", text: modulo.foco }));
+    view.appendChild(el("div", { class: "card module-lesson" }, [
+      el("p", { class: "pill", text: "ideia-chave" }),
+      el("p", { text: modulo.objetivo }),
+      el("h3", { text: "Exemplo para pensar" }),
+      el("p", { text: modulo.exemplo })
+    ]));
+
+    var desafioCard = el("div", { class: "card module-desafio" });
+    desafioCard.appendChild(el("p", { class: "pill", text: "desafio" }));
+    desafioCard.appendChild(el("h3", { text: "Escreva antes de conferir" }));
+    desafioCard.appendChild(el("p", { class: "helper-text", text: modulo.desafio }));
+    var campoResposta = el("textarea", { "aria-label": "Sua resposta ao desafio", placeholder: "Escreva sua resposta em poucas linhas..." });
+    campoResposta.value = getRespostaDesafio(modulo.id);
+    campoResposta.addEventListener("input", function () { setRespostaDesafio(modulo.id, campoResposta.value); });
+    desafioCard.appendChild(campoResposta);
+    var btnComparar = el("button", { class: "primary", text: "Comparar com a leitura de referência" });
+    desafioCard.appendChild(btnComparar);
+    view.appendChild(desafioCard);
+
+    var quiz = el("div", { class: "card module-quiz hidden" });
+    quiz.appendChild(el("p", { class: "pill", text: "confronto" }));
+    quiz.appendChild(el("p", { class: "helper-text", text: "Agora compare sua resposta com a leitura que a disciplina sustenta." }));
+    quiz.appendChild(el("h3", { text: modulo.pergunta }));
+    var options = el("div", { class: "quiz-options" });
+    modulo.opcoes.forEach(function (opcao, i) {
+      var b = el("button", { class: "secondary quiz-option", text: opcao });
+      b.addEventListener("click", function () {
+        options.querySelectorAll("button").forEach(function (item) { item.disabled = true; });
+        var acerto = i === modulo.correta;
+        b.classList.add(acerto ? "quiz-correct" : "quiz-wrong");
+        quiz.appendChild(el("p", { class: acerto ? "quiz-feedback correct" : "quiz-feedback wrong", text: (acerto ? "Sua leitura confere. " : "Vale ajustar sua resposta acima. ") + modulo.feedback }));
+        if (acerto) { marcarModulo(modulo.id); quiz.appendChild(el("button", { class: "primary", text: "Marcar módulo como concluído", onclick: function () { navegar("#/curso"); } })); }
+      });
+      options.appendChild(b);
+    });
+    quiz.appendChild(options);
+    if (feitos.indexOf(modulo.id) >= 0) quiz.appendChild(el("p", { class: "quiz-feedback correct", text: "Módulo concluído. Você pode revisitar este conteúdo quando quiser." }));
+    btnComparar.addEventListener("click", function () { quiz.classList.remove("hidden"); quiz.scrollIntoView({ behavior: "smooth", block: "start" }); });
+    view.appendChild(quiz);
+    var idx = MODULOS.indexOf(modulo);
+    var proximo = MODULOS[idx + 1];
+    view.appendChild(el("div", { class: "step-actions" }, [
+      el("button", { class: "secondary", text: "Voltar ao percurso", onclick: function () { navegar("#/curso"); } }),
+      proximo ? el("button", { class: "primary", text: "Próximo módulo", onclick: function () { navegar("#/modulo/" + proximo.id); } }) : el("button", { class: "primary", text: "Ir para a missão", onclick: function () { navegar("#/cebola"); } })
+    ]));
   }
 
   function renderEtapa(args, view) {
@@ -869,6 +1088,9 @@
   function bootApp() {
     registrarPwa();
     rota("cebola", renderCebola);
+    rota("curso", renderCurso);
+    rota("modulo", renderModulo);
+    rota("laboratorio", renderLaboratorio);
     rota("etapa", renderEtapa);
     rota("camada", renderCamada);
     rota("evidencias", renderEvidencias);
@@ -895,6 +1117,11 @@
         iniciar(json);
       });
     });
+    document.getElementById("btn-curso").addEventListener("click", function () {
+      fetch("missoes/paraibuna-enchentes.json").then(function (r) { return r.json(); }).then(function (json) {
+        iniciar(json, "curso");
+      });
+    });
     document.getElementById("btn-importar").addEventListener("click", function () {
       document.getElementById("file-importar").click();
     });
@@ -906,14 +1133,14 @@
       reader.onload = function () { try { iniciar(JSON.parse(reader.result)); } catch (e) { alert("JSON inválido."); } };
       reader.readAsText(file);
     });
-    function iniciar(json) {
+    function iniciar(json, destino) {
       var nome = document.getElementById("nome").value.trim() || "Investigador(a)";
       var turma = document.getElementById("turma").value.trim();
       var missaoAnterior = getMissao();
       setAluno({ nome: nome, turma: turma });
       setMissao(json);
       if (!getDossie() || !missaoAnterior || missaoAnterior.id !== json.id) setDossie(dossieVazio());
-      location.href = "app.html";
+      location.href = "app.html" + (destino ? "#/" + destino : "");
     }
   }
 
@@ -929,10 +1156,11 @@
     if (!root) return;
     var passos = [
       { titulo: "Bem-vindo aos Caminhos da Água", texto: "Você vai investigar uma bacia conhecida e descobrir como água, território e sociedade se transformam mutuamente.", acao: "No fim, você terá uma explicação própria, apoiada em evidências." },
-      { titulo: "1. Comece por uma pergunta", texto: "Toda missão apresenta um problema real, como uma enchente, a falta de água ou um conflito de uso.", acao: "Antes de ver qualquer evidência, escreva sua hipótese: o que você acha que explica o problema?" },
-      { titulo: "2. Observe as evidências", texto: "Cada missão traz cartas de evidência: mapas, gráficos, fotos, documentos, dados de campo.", acao: "Analise pelo menos três. Para cada uma, anote o que você vê e que consequência isso sugere." },
-      { titulo: "3. Conecte as evidências", texto: "O app sugere relações causais prontas, como \"a impermeabilização acelera o escoamento\". Você escolhe qual evidência sustenta cada lado.", acao: "Lembre que o rio também é agente: ele erode, organiza a cidade, produz riscos e provoca decisões." },
-      { titulo: "4. Explique e proponha", texto: "Quando tiver evidências e conexões suficientes, escreva uma síntese sobre o sistema.", acao: "Depois proponha uma ação, reconheça seus limites e gere o relatório final." }
+      { titulo: "1. Conheça o percurso", texto: "A aba Percurso reúne os temas da disciplina em módulos curtos: fundamentos, bacia, campo, qualidade da água, riscos e comunicação.", acao: "Leia os módulos no seu ritmo. Em cada um, escreva sua resposta ao desafio antes de comparar com a leitura de referência — é essa comparação que mostra o que você já entendeu." },
+      { titulo: "2. Comece por uma pergunta", texto: "Toda missão apresenta um problema real, como uma enchente, a falta de água ou um conflito de uso.", acao: "Antes de ver qualquer evidência, escreva sua hipótese: o que você acha que explica o problema?" },
+      { titulo: "3. Observe as evidências", texto: "Cada missão traz cartas de evidência: mapas, gráficos, fotos, documentos, dados de campo.", acao: "Analise pelo menos três. Para cada uma, anote o que você vê e que consequência isso sugere." },
+      { titulo: "4. Conecte as evidências", texto: "O app sugere relações causais prontas, como \"a impermeabilização acelera o escoamento\". Você escolhe qual evidência sustenta cada lado.", acao: "Lembre que o rio também é agente: ele erode, organiza a cidade, produz riscos e provoca decisões." },
+      { titulo: "5. Explique e proponha", texto: "Quando tiver evidências e conexões suficientes, escreva uma síntese sobre o sistema.", acao: "Depois proponha uma ação, reconheça seus limites e gere o relatório final." }
     ];
     var passoAtual = Math.min(Math.max(Number(inicio) || 0, 0), passos.length - 1);
     var backdrop = el("div", { class: "tutorial-backdrop" });
