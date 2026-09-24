@@ -696,5 +696,14 @@
   }
   window.CaminhosDaAgua = { abrirTutorial: abrirTutorial };
   window.addEventListener("hashchange", rotearAgora);
-  document.addEventListener("DOMContentLoaded", function () { registrarPwa(); rotearAgora(); });
+  document.addEventListener("DOMContentLoaded", function () {
+    registrarPwa();
+    // HTML antigo (v1) em cache com este JS novo: recarrega uma vez sem cache.
+    if (!document.getElementById("view")) {
+      var ja = false; try { ja = sessionStorage.getItem("cda2:recarregou"); sessionStorage.setItem("cda2:recarregou", "1"); } catch (e) { /* segue */ }
+      if (!ja) location.replace("index.html?v=" + Date.now());
+      return;
+    }
+    rotearAgora();
+  });
 })();

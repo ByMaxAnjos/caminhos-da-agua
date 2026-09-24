@@ -1,11 +1,11 @@
-const CACHE_NAME = "caminhos-da-agua-v4";
+const CACHE_NAME = "caminhos-da-agua-v5";
 const APP_FILES = [
   "./",
   "./index.html",
-  "./assets/app.css",
-  "./assets/app.js",
-  "./assets/hidro.js",
-  "./assets/conteudo.js",
+  "./assets/app.css?v=5",
+  "./assets/app.js?v=5",
+  "./assets/hidro.js?v=5",
+  "./assets/conteudo.js?v=5",
   "./assets/icone.png",
   "./manifest.webmanifest"
 ];
@@ -27,10 +27,15 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   event.respondWith(
-    fetch(event.request).then((response) => {
+    // no-cache: revalida com o servidor em vez de usar a cópia de 10 min do navegador
+    // (misturar HTML antigo com JS novo quebrava o app no celular).
+    (new URL(event.request.url).origin === self.location.origin
+      ? fetch(event.request.url, { cache: "no-cache", credentials: "same-origin" })
+      : fetch(event.request)
+    ).then((response) => {
       const copy = response.clone();
       caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
       return response;
-    }).catch(() => caches.match(event.request))
+    }).catch(() => caches.match(event.request, { ignoreSearch: event.request.mode === "navigate" }))
   );
 });
