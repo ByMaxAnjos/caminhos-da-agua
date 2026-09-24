@@ -143,15 +143,6 @@ input[type=range] { display: block; width: 100%; min-height: 2.75rem; accent-col
 .report-meta, .report-empty { color: var(--muted); font-size: .9rem; }
 .report-list { padding-left: 1.2rem; }
 .report-list li { margin: .55rem 0; }
-#cebola-svg { display: block; width: 100%; max-width: 360px; height: auto; margin: 0 auto; touch-action: manipulation; }
-#cebola-svg .anel { fill: none; stroke-width: 34; }
-#cebola-svg .anel-label { fill: var(--ink); font-family: var(--mono); font-size: 10px; }
-#cebola-svg .miolo { fill: var(--accent); }
-#cebola-svg .miolo-label { fill: #fff; font-family: var(--mono); font-size: 9px; text-anchor: middle; }
-#cebola-svg .seta { fill: none; stroke-width: 2.4; }
-#cebola-svg .seta.dentro-fora { stroke: var(--warm); }
-#cebola-svg .seta.fora-dentro { stroke: var(--accent); }
-#cebola-svg .seta.suposicao { stroke: #9aa9a5; stroke-dasharray: 4 3; }
 .tutorial-backdrop { position: fixed; z-index: 30; inset: 0; display: grid; place-items: center; padding: 1rem; background: rgba(5, 46, 43, .58); }
 .tutorial { width: min(100%, 30rem); max-height: min(90vh, 40rem); overflow: auto; padding: 1.25rem; border: 1px solid var(--rule); border-radius: 18px; background: var(--surface); box-shadow: 0 18px 50px rgba(16, 42, 47, .25); }
 .tutorial-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
@@ -163,7 +154,77 @@ input[type=range] { display: block; width: 100%; min-height: 2.75rem; accent-col
 .tutorial-progress span { display: block; height: 100%; background: var(--accent); transition: width .2s ease; }
 .tutorial-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem; margin-top: 1.2rem; }
 .tutorial-actions .text-button { margin-right: auto; }
-@media (max-width: 520px) { body { padding: .9rem .75rem 6rem; } .start-shell { padding-top: 1vh; } .steps { grid-template-columns: 1fr; } .step { min-height: 3rem; } .topbar { align-items: flex-start; flex-direction: column; gap: .15rem; } .topbar strong { max-width: 100%; } .card { padding: .9rem; } }
+/* ---------- v2: Unidade II ---------- */
+body.sem-abas nav.tabs, body.sem-abas .topbar { display: none; }
+.voltar { display: inline-block; margin: 0 0 .6rem; padding: 0; }
+.problema-card { border-top: 4px solid var(--coral); }
+.problema-card h2, .pergunta { font-family: var(--serif); font-size: 1.35rem; line-height: 1.25; color: var(--accent-dark); }
+.titulo-encontro { font-size: 2rem; }
+.ideias { margin: .4rem 0 0; padding-left: 1.3rem; }
+.ideias li { margin: .45rem 0; font-size: 1.02rem; }
+.botao-link { display: inline-block; margin: .5rem 0; padding: .72rem 1.35rem; border-radius: 100px; background: var(--accent); color: #fff; font-weight: 650; font-size: .92rem; text-decoration: none; }
+.botao-link:hover { background: var(--accent-dark); }
+.concluido { margin-top: 1rem; background: var(--green); }
+.sim-card canvas { display: block; width: 100%; height: auto; aspect-ratio: 1; border-radius: 12px; cursor: crosshair; touch-action: manipulation; }
+.legenda { margin: .6rem 0 0; color: var(--muted); font-size: .8rem; }
+.aviso { margin: .6rem 0 0; padding: .6rem .8rem; border-radius: 8px; background: var(--warm-soft); color: #8b471e; font-size: .88rem; }
+.controles { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.controles select { width: auto; flex: 1 1 10rem; margin: 0; }
+.controles button { margin: 0; }
+.medidas { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: .6rem 0; }
+.medidas div { padding: .6rem; border-radius: 10px; background: var(--accent-soft); }
+.medidas b { display: block; font-family: var(--serif); font-size: 1.5rem; font-weight: 600; line-height: 1.1; }
+.medidas span { color: var(--muted); font-size: .76rem; }
+.tabela-wrap { overflow-x: auto; }
+.tabela { width: 100%; border-collapse: collapse; font-size: .88rem; }
+.tabela th, .tabela td { padding: .45rem .5rem; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+.tabela thead th { color: var(--muted); font-family: var(--mono); font-size: .7rem; font-weight: 500; text-transform: uppercase; letter-spacing: .06em; }
+.tabela .num, .tabela b.num { font-family: var(--mono); white-space: nowrap; }
+.tabela small { color: var(--muted); }
+.tabela abbr { text-decoration: none; font-family: var(--mono); }
+.tabela.entrada input { width: 100%; min-width: 6rem; margin: 0; padding: .45rem .5rem; border: 1px solid #b9cbc7; border-radius: 8px; font: inherit; }
+.tabela.entrada th[scope=row] { font-weight: 500; font-size: .84rem; }
+.grafico { display: block; width: 100%; height: auto; }
+.grafico .eixo { stroke: #9fb3ae; stroke-width: 1; }
+.grafico .linha { fill: none; stroke: var(--blue); stroke-width: 2.5; stroke-linejoin: round; }
+.grafico text { fill: var(--muted); font-family: var(--mono); font-size: 11px; }
+.jogo-area svg { display: block; width: 100%; height: auto; }
+.trecho { cursor: pointer; }
+.trecho .alvo { stroke: transparent; stroke-width: 44; }
+.trecho .rio { stroke: var(--blue); stroke-width: 5; stroke-linecap: round; }
+.trecho circle { fill: #fff; stroke: var(--blue); stroke-width: 2; }
+.trecho text { fill: var(--ink); font-family: var(--mono); font-size: 21px; font-weight: 600; pointer-events: none; }
+.trecho:focus { outline: none; }
+.trecho:focus circle, .trecho:hover circle { stroke-width: 3.5; }
+.trecho.certo circle { fill: var(--accent-soft); stroke: var(--accent); }
+.trecho.errado circle { fill: var(--warm-soft); stroke: var(--warm); }
+.nascente { fill: var(--accent); }
+.rotulo { fill: var(--muted); font-family: var(--mono); font-size: 12px; }
+.duas-colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .8rem; }
+.grande { font-family: var(--serif); font-size: 2rem; font-weight: 600; margin: .2rem 0; }
+.ferramenta { margin-bottom: .55rem; }
+.roteiro summary { display: flex; align-items: center; gap: .7rem; cursor: pointer; list-style: none; }
+.roteiro summary::-webkit-details-marker { display: none; }
+.roteiro summary > span:nth-child(2) { display: grid; }
+.roteiro summary small { color: var(--muted); font-size: .78rem; }
+.passos { margin: .8rem 0 0; padding: 0; list-style: none; }
+.passos li { display: flex; gap: .6rem; align-items: flex-start; padding: .45rem 0; border-top: 1px solid var(--rule); }
+.passos input[type=checkbox] { flex: 0 0 auto; width: 1.25rem; height: 1.25rem; min-height: 0; margin: .15rem 0 0; accent-color: var(--accent); }
+.passos label { margin: 0; color: var(--ink); font-size: .92rem; font-weight: 400; line-height: 1.45; }
+.ajuda { border: 1px solid #bfe0f7; background: #f3faff; }
+.ajuda summary { display: flex; align-items: center; gap: .6rem; cursor: pointer; font-weight: 700; color: var(--accent-dark); list-style: none; }
+.ajuda summary::-webkit-details-marker { display: none; }
+.ajuda summary::after { content: "mostrar"; margin-left: auto; color: var(--blue); font-family: var(--mono); font-size: .7rem; font-weight: 500; }
+.ajuda[open] summary::after { content: "ocultar"; }
+.ajuda-icone { display: grid; flex: 0 0 1.6rem; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--blue); color: #fff; font-family: var(--mono); font-size: .85rem; }
+.ajuda-passos { margin: .7rem 0 0; padding-left: 1.3rem; }
+.ajuda-passos li { margin: .4rem 0; font-size: .93rem; }
+.ajuda-sub { margin: .9rem 0 0; color: var(--accent); font-family: var(--mono); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; }
+.ajuda-dica { margin: .8rem 0 0; padding: .6rem .75rem; border-radius: 8px; background: #fff; color: var(--muted); font-size: .88rem; }
+.ajuda-dica::before { content: "Dica: "; color: var(--accent-dark); font-weight: 700; }
+.explica { margin: .2rem 0 .6rem; color: var(--muted); font-size: .86rem; font-style: italic; }
+.dica-campo { display: block; margin-top: .15rem; color: var(--muted); font-size: .72rem; font-weight: 400; line-height: 1.3; }
+@media (max-width: 520px) { .medidas { grid-template-columns: repeat(2, 1fr); } .duas-colunas { grid-template-columns: 1fr; } body { padding: .9rem .75rem 6rem; } .start-shell { padding-top: 1vh; } .steps { grid-template-columns: 1fr; } .step { min-height: 3rem; } .topbar { align-items: flex-start; flex-direction: column; gap: .15rem; } .topbar strong { max-width: 100%; } .card { padding: .9rem; } }
 @media (min-width: 700px) { body { padding-top: 2.5rem; } .start-shell { padding-top: 4vh; } .action-stack { display: flex; flex-wrap: wrap; align-items: center; } }
 @media print {
   body { max-width: none; padding: 0; background: #fff; color: #000; }

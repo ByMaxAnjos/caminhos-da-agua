@@ -3,8 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Caminhos da Água</title>
+<title>Caminhos da Água · Bacia hidrográfica</title>
+<meta name="description" content="Unidade II de Hidrogeografia: bacia hidrográfica, hierarquia fluvial, delimitação, morfometria e sistema fluvial, com simulador e roteiros de QGIS.">
+<meta name="theme-color" content="#0e7a5f">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icone.png">
+<link rel="apple-touch-icon" href="assets/icone.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400..600;1,400..500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -12,56 +16,24 @@
 </head>
 <body>
 
-<main class="start-shell">
-  <header class="brand-block">
-    <p class="kicker">Água, território e sociedade em conexão</p>
-    <h1>Caminhos da <span class="accent-word">Água</span></h1>
-    <p class="lede">Investigue uma bacia como um sistema vivo: observe evidências, conecte camadas e explique os caminhos da água.</p>
-  </header>
+<header class="topbar">
+  <a class="topbar-brand" href="#/trilha">Caminhos da <span class="accent-word">Água</span></a>
+  <strong>Unidade II · Bacia hidrográfica</strong>
+  <button class="text-button" type="button" onclick="CaminhosDaAgua.abrirTutorial()">Como usar</button>
+</header>
 
-  <section class="card welcome-card" aria-labelledby="como-funciona">
-    <p class="eyebrow">Como funciona</p>
-    <h2 id="como-funciona">Uma investigação em três movimentos</h2>
-    <div class="steps" aria-label="Etapas da investigação">
-      <div class="step"><span>1</span><p><strong>Observe</strong><br>Encontre evidências no território.</p></div>
-      <div class="step"><span>2</span><p><strong>Conecte</strong><br>Relacione as seis camadas.</p></div>
-      <div class="step"><span>3</span><p><strong>Explique</strong><br>Proponha uma ação possível.</p></div>
-    </div>
-  </section>
+<main id="view" tabindex="-1"></main>
 
-  <section class="card" aria-labelledby="continuar-titulo">
-    <p class="eyebrow">Seu percurso</p>
-    <h2 id="continuar-titulo">Continuar investigação</h2>
-    <div id="continuar-area">
-      <p class="evidencia-status">Nenhuma missão em andamento neste aparelho.</p>
-    </div>
-  </section>
+<nav class="tabs" aria-label="Navegação principal">
+  <button type="button" data-rota="trilha" onclick="location.hash='#/trilha'"><span aria-hidden="true">▦</span><span>Trilha</span></button>
+  <button type="button" data-rota="simulador" onclick="location.hash='#/simulador'"><span aria-hidden="true">◭</span><span>Simulador</span></button>
+  <button type="button" data-rota="ferramentas" onclick="location.hash='#/ferramentas'"><span aria-hidden="true">∑</span><span>Ferramentas</span></button>
+  <button type="button" data-rota="qgis" onclick="location.hash='#/qgis'"><span aria-hidden="true">☰</span><span>QGIS</span></button>
+  <button type="button" data-rota="relatorio" onclick="location.hash='#/relatorio'"><span aria-hidden="true">✓</span><span>Relatório</span></button>
+</nav>
 
-  <section class="card" aria-labelledby="entrar-titulo">
-    <p class="eyebrow">Começar</p>
-    <h2 id="entrar-titulo">Entre na atividade</h2>
-    <p class="helper-text">Use um nome ou apelido. Seus dados ficam somente neste aparelho.</p>
-    <label for="nome">Nome ou apelido</label>
-    <input type="text" id="nome" autocomplete="nickname" placeholder="Como a equipe vai reconhecer você">
-    <label for="turma">Turma ou equipe <span>(opcional)</span></label>
-    <input type="text" id="turma" autocomplete="organization" placeholder="Ex.: equipe 3">
-    <div class="action-stack">
-      <button class="primary" id="btn-demo">Começar percurso: Paraibuna</button>
-      <button class="secondary" id="btn-curso">Abrir percurso completo</button>
-      <button class="text-button" id="btn-tutorial">Ver tutorial passo a passo</button>
-    </div>
-    <details class="teacher-tools">
-      <summary>Área do professor</summary>
-      <p class="evidencia-status">Use esta opção apenas para carregar uma missão preparada previamente.</p>
-      <button class="secondary" id="btn-importar">Carregar missão do professor</button>
-    </details>
-    <input type="file" id="file-importar" accept="application/json" class="hidden">
-    <p class="evidencia-status">Ao final, o aluno gera um relatório simples para entregar ou imprimir.</p>
-  </section>
-</main>
-<div id="tutorial-root"></div>
-
+<script src="assets/hidro.js"></script>
+<script src="assets/conteudo.js"></script>
 <script src="assets/app.js"></script>
-<script>CaminhosDaAgua.renderInicial();</script>
 </body>
 </html>

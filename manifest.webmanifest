@@ -1,10 +1,11 @@
 {
-  "name": "Caminhos da Água",
+  "name": "Caminhos da Água · Bacia hidrográfica",
   "short_name": "Caminhos",
+  "description": "Unidade II de Hidrogeografia: bacia, hierarquia fluvial, delimitação, morfometria e sistema fluvial.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#fdfcf9",
-  "theme_color": "#1d5f6b",
-  "icons": []
+  "background_color": "#f7fbf8",
+  "theme_color": "#0e7a5f",
+  "icons": [{ "src": "assets/icone.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }]
 }
